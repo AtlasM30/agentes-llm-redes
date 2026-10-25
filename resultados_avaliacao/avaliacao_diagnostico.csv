@@ -1,0 +1,13 @@
+caso,dispositivo,esperado,previsto,acerto,confianca,evidencias_utilizadas
+caso_00,client1,sem_anomalia_detectada,sem_anomalia_detectada,True,limitada,"Ping, DNS e HTTP funcionando. | Nenhuma anomalia identificada pelos testes."
+caso_00,client2,sem_anomalia_detectada,sem_anomalia_detectada,True,limitada,"Ping, DNS e HTTP funcionando. | Nenhuma anomalia identificada pelos testes."
+caso_01,client1,problema_dns,problema_dns,True,indicativa,Conectividade IP funcionando. | Teste de resolucao DNS falhou.
+caso_01,client2,sem_anomalia_detectada,sem_anomalia_detectada,True,limitada,"Ping, DNS e HTTP funcionando. | Nenhuma anomalia identificada pelos testes."
+caso_02,client1,falha_de_roteamento,falha_de_roteamento,True,alta,Rota padrao ausente. | Ping para o servidor falhou.
+caso_02,client2,sem_anomalia_detectada,sem_anomalia_detectada,True,limitada,"Ping, DNS e HTTP funcionando. | Nenhuma anomalia identificada pelos testes."
+caso_03,client1,falha_de_interface,falha_de_interface,True,alta,Interface client1-eth0 encontra-se DOWN.
+caso_03,client2,sem_anomalia_detectada,sem_anomalia_detectada,True,limitada,"Ping, DNS e HTTP funcionando. | Nenhuma anomalia identificada pelos testes."
+caso_04,client1,bloqueio_acl,bloqueio_acl,True,alta,Ping e DNS funcionando. | HTTP indisponivel. | Regra TCP/80 DROP ou REJECT encontrada no servidor para client1.
+caso_04,client2,sem_anomalia_detectada,sem_anomalia_detectada,True,limitada,"Ping, DNS e HTTP funcionando. | Nenhuma anomalia identificada pelos testes."
+caso_05,client1,possivel_congestionamento,possivel_congestionamento,True,indicativa,Latencia atual: 199.220 ms. | Referencia: 33.403 ms. | Aumento expressivo de latencia.
+caso_05,client2,possivel_congestionamento,possivel_congestionamento,True,indicativa,Latencia atual: 357.845 ms. | Referencia: 24.253 ms. | Aumento expressivo de latencia.

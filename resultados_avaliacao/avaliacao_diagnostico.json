@@ -1,0 +1,190 @@
+{
+  "gerado_em_utc": "2026-10-25T22:33:52.107312+00:00",
+  "total_avaliado": 12,
+  "acertos": 12,
+  "erros_classificacao": 0,
+  "taxa_acerto": 1.0,
+  "hipoteses_inconclusivas_ou_genericas": 0,
+  "matriz_confusao": [
+    {
+      "esperado": "bloqueio_acl",
+      "previsto": "bloqueio_acl",
+      "quantidade": 1
+    },
+    {
+      "esperado": "falha_de_interface",
+      "previsto": "falha_de_interface",
+      "quantidade": 1
+    },
+    {
+      "esperado": "falha_de_roteamento",
+      "previsto": "falha_de_roteamento",
+      "quantidade": 1
+    },
+    {
+      "esperado": "possivel_congestionamento",
+      "previsto": "possivel_congestionamento",
+      "quantidade": 2
+    },
+    {
+      "esperado": "problema_dns",
+      "previsto": "problema_dns",
+      "quantidade": 1
+    },
+    {
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "quantidade": 6
+    }
+  ],
+  "resultados": [
+    {
+      "caso": "caso_00",
+      "dispositivo": "client1",
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "acerto": true,
+      "confianca": "limitada",
+      "evidencias_utilizadas": [
+        "Ping, DNS e HTTP funcionando.",
+        "Nenhuma anomalia identificada pelos testes."
+      ]
+    },
+    {
+      "caso": "caso_00",
+      "dispositivo": "client2",
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "acerto": true,
+      "confianca": "limitada",
+      "evidencias_utilizadas": [
+        "Ping, DNS e HTTP funcionando.",
+        "Nenhuma anomalia identificada pelos testes."
+      ]
+    },
+    {
+      "caso": "caso_01",
+      "dispositivo": "client1",
+      "esperado": "problema_dns",
+      "previsto": "problema_dns",
+      "acerto": true,
+      "confianca": "indicativa",
+      "evidencias_utilizadas": [
+        "Conectividade IP funcionando.",
+        "Teste de resolucao DNS falhou."
+      ]
+    },
+    {
+      "caso": "caso_01",
+      "dispositivo": "client2",
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "acerto": true,
+      "confianca": "limitada",
+      "evidencias_utilizadas": [
+        "Ping, DNS e HTTP funcionando.",
+        "Nenhuma anomalia identificada pelos testes."
+      ]
+    },
+    {
+      "caso": "caso_02",
+      "dispositivo": "client1",
+      "esperado": "falha_de_roteamento",
+      "previsto": "falha_de_roteamento",
+      "acerto": true,
+      "confianca": "alta",
+      "evidencias_utilizadas": [
+        "Rota padrao ausente.",
+        "Ping para o servidor falhou."
+      ]
+    },
+    {
+      "caso": "caso_02",
+      "dispositivo": "client2",
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "acerto": true,
+      "confianca": "limitada",
+      "evidencias_utilizadas": [
+        "Ping, DNS e HTTP funcionando.",
+        "Nenhuma anomalia identificada pelos testes."
+      ]
+    },
+    {
+      "caso": "caso_03",
+      "dispositivo": "client1",
+      "esperado": "falha_de_interface",
+      "previsto": "falha_de_interface",
+      "acerto": true,
+      "confianca": "alta",
+      "evidencias_utilizadas": [
+        "Interface client1-eth0 encontra-se DOWN."
+      ]
+    },
+    {
+      "caso": "caso_03",
+      "dispositivo": "client2",
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "acerto": true,
+      "confianca": "limitada",
+      "evidencias_utilizadas": [
+        "Ping, DNS e HTTP funcionando.",
+        "Nenhuma anomalia identificada pelos testes."
+      ]
+    },
+    {
+      "caso": "caso_04",
+      "dispositivo": "client1",
+      "esperado": "bloqueio_acl",
+      "previsto": "bloqueio_acl",
+      "acerto": true,
+      "confianca": "alta",
+      "evidencias_utilizadas": [
+        "Ping e DNS funcionando.",
+        "HTTP indisponivel.",
+        "Regra TCP/80 DROP ou REJECT encontrada no servidor para client1."
+      ]
+    },
+    {
+      "caso": "caso_04",
+      "dispositivo": "client2",
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "acerto": true,
+      "confianca": "limitada",
+      "evidencias_utilizadas": [
+        "Ping, DNS e HTTP funcionando.",
+        "Nenhuma anomalia identificada pelos testes."
+      ]
+    },
+    {
+      "caso": "caso_05",
+      "dispositivo": "client1",
+      "esperado": "possivel_congestionamento",
+      "previsto": "possivel_congestionamento",
+      "acerto": true,
+      "confianca": "indicativa",
+      "evidencias_utilizadas": [
+        "Latencia atual: 199.220 ms.",
+        "Referencia: 33.403 ms.",
+        "Aumento expressivo de latencia."
+      ]
+    },
+    {
+      "caso": "caso_05",
+      "dispositivo": "client2",
+      "esperado": "possivel_congestionamento",
+      "previsto": "possivel_congestionamento",
+      "acerto": true,
+      "confianca": "indicativa",
+      "evidencias_utilizadas": [
+        "Latencia atual: 357.845 ms.",
+        "Referencia: 24.253 ms.",
+        "Aumento expressivo de latencia."
+      ]
+    }
+  ],
+  "problemas_leitura": [],
+  "nota": "Avaliacao restrita aos cenarios controlados; rotulos servem apenas para pontuacao. O gabarito nao e utilizado pelo diagnostico."
+}

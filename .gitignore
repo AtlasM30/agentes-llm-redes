@@ -29,3 +29,5 @@ dados/desempenho/
 # Backups
 backup_etapa5/
 backup_*/
+
+avaliacao/gabarito_avaliacao.json
