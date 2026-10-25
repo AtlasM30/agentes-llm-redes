@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# Arquivos temporarios
+*.log
+*.pid
+*.tmp
+*.swp
+
+# Credenciais e configuracoes locais
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dados experimentais locais
+logs/
+dados/gabaritos/
+dados/desempenho/
+
+# Backups
+backup_etapa5/
+backup_*/
