@@ -169,7 +169,15 @@ class ValidadorDeterministico:
                 "sintaxe", dispositivo=dispositivo, solicitacao_original=original,
             )
 
-        binario = tokens[0].split("/")[-1]
+        primeiro_token = tokens[0]
+        if "=" in primeiro_token or ".." in primeiro_token:
+            return self._decisao(
+                False, "INJECAO_SHELL_DETECTADA",
+                "Injecao de variavel de ambiente inline ou travessia de caminho detectada no comando.",
+                "sintaxe", dispositivo=dispositivo, solicitacao_original=original,
+            )
+
+        binario = primeiro_token.split("/")[-1]
 
         # Gate 2A: Binarios administrativos ou destrutivos
         if binario in BINARIOS_ESTRITAMENTE_PROIBIDOS:
@@ -518,6 +526,27 @@ class ValidadorDeterministico:
         original = solicitacao.get("_original") or {
             k: v for k, v in solicitacao.items() if k != "_original"
         }
+
+        chaves_topo_permitidas = {
+            "operacao", "dispositivo", "parametros", "comando_bruto", "justificativa", "_original",
+        }
+        chaves_desconhecidas = set(solicitacao.keys()) - chaves_topo_permitidas
+        if chaves_desconhecidas:
+            return self._decisao(
+                False, "SINTAXE_INVALIDA",
+                f"Campos de topo nao reconhecidos na solicitacao: {sorted(chaves_desconhecidas)}.",
+                "sintaxe", solicitacao_original=original,
+            )
+
+        # Bloqueia contrabando de comando_bruto junto com operacao estruturada
+        if "comando_bruto" in solicitacao and solicitacao.get("operacao"):
+            return self._decisao(
+                False, "SINTAXE_INVALIDA",
+                "Solicitacao ambigua: nao envie 'operacao' e 'comando_bruto' simultaneamente.",
+                "sintaxe", operacao=str(solicitacao.get("operacao")),
+                dispositivo=str(solicitacao.get("dispositivo") or ""),
+                solicitacao_original=original,
+            )
 
         # Se o modelo enviou apenas comando_bruto em vez de operacao estruturada
         if "comando_bruto" in solicitacao and not solicitacao.get("operacao"):

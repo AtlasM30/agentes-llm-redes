@@ -169,6 +169,64 @@ class RecuperadorRAG:
             termos.append("http indisponivel curl iptables -S INPUT tcp dport 80 DROP REJECT acl")
 
         if len(termos) == 1:
-            termos.append("operacao normal conectividade ping dig http latencia referencia")
+            # Quando ainda nao ha observacoes coletadas (iteracao 0 progressiva) ou
+            # nenhuma falha apareceu, prioriza topologia em camadas e precedencia enlace/rota
+            if not disp:
+                termos.append("topologia sub-redes precedencia interface ip -br link ip route show")
+            else:
+                termos.append("topologia mininet iproute2 interface link rota conectividade")
 
         return " ".join(termos)
+
+
+# Mapeamento explicito de aderencia documental por hipotese diagnostica
+# (utilizado para auditoria de fundamentacao/fidelidade estilo RAGAs — Secao 4.5)
+MAPA_HIPOTESE_FONTES_ESPERADAS = {
+    "falha_de_interface": frozenset({"iproute2_man", "mininet_walkthrough"}),
+    "falha_de_roteamento": frozenset({"iproute2_man", "mininet_walkthrough"}),
+    "problema_dns": frozenset({"bind9_dig", "dnsmasq_man", "mininet_walkthrough"}),
+    "bloqueio_acl": frozenset({"iptables_man", "mininet_walkthrough"}),
+    "problema_http_ou_bloqueio": frozenset({"iptables_man", "mininet_walkthrough"}),
+    "possivel_congestionamento": frozenset({"tc_man", "iperf3_esnet", "mininet_walkthrough"}),
+    "latencia_elevada": frozenset({"tc_man", "iperf3_esnet", "mininet_walkthrough"}),
+    "sem_anomalia_detectada": frozenset({
+        "mininet_walkthrough", "iproute2_man", "bind9_dig", "dnsmasq_man", "iptables_man", "tc_man",
+    }),
+    "falha_de_conectividade": frozenset({"iproute2_man", "mininet_walkthrough"}),
+    "evidencias_insuficientes": frozenset({
+        "mininet_walkthrough", "iproute2_man", "bind9_dig", "dnsmasq_man", "iptables_man", "tc_man", "iperf3_esnet",
+    }),
+}
+
+
+def avaliar_aderencia_citacoes(hipotese, fontes_citadas, mapa_rag):
+    """Avalia se as citacoes RAG pertencem ao contexto recuperado e ao dominio tecnico."""
+    citadas_brutas = [c for c in (fontes_citadas or []) if isinstance(c, str)]
+    recuperadas_validas = [c for c in citadas_brutas if c in mapa_rag]
+    alucinadas = [c for c in citadas_brutas if c not in mapa_rag]
+
+    fontes_esperadas = MAPA_HIPOTESE_FONTES_ESPERADAS.get(
+        hipotese,
+        MAPA_HIPOTESE_FONTES_ESPERADAS["evidencias_insuficientes"],
+    )
+
+    aderentes = []
+    fora_dominio = []
+    for cid in recuperadas_validas:
+        fonte_id = mapa_rag[cid].get("fonte_id", "")
+        if fonte_id in fontes_esperadas:
+            aderentes.append(cid)
+        else:
+            fora_dominio.append(cid)
+
+    total_rec = len(recuperadas_validas)
+    taxa_aderencia = round(len(aderentes) / total_rec, 4) if total_rec > 0 else None
+
+    return {
+        "citacoes_informadas": citadas_brutas,
+        "citacoes_presentes_no_contexto": recuperadas_validas,
+        "citacoes_inexistentes_filtradas": alucinadas,
+        "citacoes_aderentes_ao_dominio": aderentes,
+        "citacoes_fora_de_dominio": fora_dominio,
+        "taxa_aderencia_tematica": taxa_aderencia,
+    }

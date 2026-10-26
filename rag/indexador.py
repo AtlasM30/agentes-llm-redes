@@ -60,6 +60,19 @@ class ViolacaoSeparacaoDadosError(ValueError):
     """Lancada ao detectar tentativa de ingerir gabarito ou log rotulado no RAG."""
 
 
+class ViolacaoSegurancaCorpusError(ValueError):
+    """Lancada ao detectar instrucoes de prompt injection no corpus RAG."""
+
+
+PADROES_PROMPT_INJECTION_RAG = (
+    r"ignore\s+(?:all\s+|todas\s+as\s+)?(?:previous|prior|anteriores)\s+(?:instructions|instrucoes|regras)",
+    r"desative\s+o\s+validador",
+    r"bypass\s+(?:the\s+)?(?:validator|security)",
+    r"system\s*override\s*:",
+    r"execute\s+imediatamente\s+sem\s+validar",
+)
+
+
 def remover_acentos(texto):
     normalizado = unicodedata.normalize("NFKD", texto)
     return "".join(c for c in normalizado if not unicodedata.combining(c))
@@ -112,6 +125,15 @@ def verificar_conteudo_sem_gabarito(texto, origem=""):
         raise ViolacaoSeparacaoDadosError(
             f"Conteudo proibido detectado em '{origem}': estrutura de gabarito_avaliacao."
         )
+
+
+def verificar_documento_sem_injecao_prompt(texto, origem=""):
+    """Bloqueia documentos contaminados com diretivas de prompt injection."""
+    for padrao in PADROES_PROMPT_INJECTION_RAG:
+        if re.search(padrao, texto, flags=re.IGNORECASE):
+            raise ViolacaoSegurancaCorpusError(
+                f"Potencial prompt injection detectado no documento RAG '{origem}' (padrao: {padrao})."
+            )
 
 
 def fatiar_markdown(texto, tamanho_max_chars=900, sobreposicao_chars=120):
@@ -216,6 +238,7 @@ def construir_indice(
 
         texto = caminho_doc.read_text(encoding="utf-8")
         verificar_conteudo_sem_gabarito(texto, origem=str(caminho_doc))
+        verificar_documento_sem_injecao_prompt(texto, origem=str(caminho_doc))
         hash_global.update(texto.encode("utf-8"))
 
         fatias = fatiar_markdown(
@@ -271,6 +294,7 @@ def construir_indice(
         verificar_caminho_seguro(extra_man)
         texto_extra = extra_man.read_text(encoding="utf-8")
         verificar_conteudo_sem_gabarito(texto_extra, origem=str(extra_man))
+        verificar_documento_sem_injecao_prompt(texto_extra, origem=str(extra_man))
         hash_global.update(texto_extra.encode("utf-8"))
         for idx, (secao, trecho) in enumerate(
             fatiar_markdown(texto_extra, tamanho_max_chars, sobreposicao_chars)

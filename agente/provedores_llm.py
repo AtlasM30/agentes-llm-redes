@@ -1,9 +1,14 @@
 """Provedores de Modelos de Linguagem (Gemini, OpenAI/Groq, Ollama e Simulado).
 
-Utiliza apenas a biblioteca padrao / requests + python-dotenv ja presentes no
-ambiente, permitindo operar tanto via APIs externas quanto via servidor local
-Ollama ou no modo deterministico simulado (para testes automatizados, CI e
-reproducao offline sem consumo de creditos de API).
+NOTA METODOLOGICA IMPORTANTE (Etapa 7 / Etapa 8):
+- Os clientes `ClienteGemini`, `ClienteOpenAICompativel` e `ClienteOllama`
+  realizam inferencia real em modelos de linguagem, reportando telemetria
+  oficial de tokens e latencia real de API/inferencia.
+- O `ClienteLLMSimulado` e uma maquina de estados deterministica multi-etapa
+  alinhada a arvore de precedencia causal da Etapa 6, destinada exclusivamente
+  a testes automatizados de integracao, CI e verificacao offline do pipeline
+  sem chaves de API. Seus resultados NAO constituem avaliacao da capacidade
+  cognitiva de um LLM real.
 """
 import json
 import os
@@ -39,7 +44,7 @@ def carregar_variaveis_env(caminho_env=".env"):
 
 
 def extrair_json_resposta(texto):
-    """Extrai objeto JSON mesmo se o modelo envolver a saida em blocos ```json."""
+    """Extrai e repara objeto JSON mesmo com cercas Markdown ou virgulas finais."""
     if isinstance(texto, dict):
         return texto
     if not isinstance(texto, str) or not texto.strip():
@@ -55,13 +60,39 @@ def extrair_json_resposta(texto):
         if inicio != -1 and fim != -1 and fim > inicio:
             limpo = limpo[inicio:fim + 1]
 
-    return json.loads(limpo)
+    # Reparo leve de virgulas sobrando antes de '}' ou ']' comuns em LLMs locais
+    limpo_sem_virgula_final = re.sub(r",\s*([}\]])", r"\1", limpo)
+    try:
+        return json.loads(limpo_sem_virgula_final)
+    except json.JSONDecodeError:
+        return json.loads(limpo)
+
+
+def _requisicao_http_com_backoff(construir_request, timeout_s, max_tentativas=3):
+    """Executa chamada HTTP com retentativa exponencial para HTTP 429/503."""
+    atraso = 1.5
+    for tentativa in range(1, max_tentativas + 1):
+        req = construir_request()
+        try:
+            with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            if exc.code in (429, 503) and tentativa < max_tentativas:
+                retry_hdr = exc.headers.get("Retry-After") if exc.headers else None
+                espera = float(retry_hdr) if (retry_hdr and retry_hdr.isdigit()) else atraso
+                time.sleep(min(espera, 12.0))
+                atraso *= 2.0
+                continue
+            detalhe = exc.read().decode("utf-8", errors="replace")[:500]
+            raise RuntimeError(f"Erro HTTP {exc.code}: {detalhe}") from exc
+    raise RuntimeError("Falha apos esgotar retentativas HTTP.")
 
 
 class ClienteLLMBase:
     """Interface comum para provedores LLM com telemetria de tokens e latencia."""
 
     provedor = "base"
+    eh_llm_real = True
 
     def __init__(self, modelo, temperatura=0.0, max_tokens=1200, timeout_s=45):
         self.modelo = modelo
@@ -77,6 +108,7 @@ class ClienteGemini(ClienteLLMBase):
     """Cliente REST nativo para Google Gemini API (GEMINI_API_KEY)."""
 
     provedor = "gemini"
+    eh_llm_real = True
 
     def __init__(self, modelo=None, temperatura=0.0, max_tokens=1200, timeout_s=45, api_key=None):
         carregar_variaveis_env()
@@ -102,20 +134,17 @@ class ClienteGemini(ClienteLLMBase):
                 "responseMimeType": "application/json",
             },
         }
+        corpo = json.dumps(payload).encode("utf-8")
         inicio = time.monotonic()
-        req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            method="POST",
+        dados = _requisicao_http_com_backoff(
+            lambda: urllib.request.Request(
+                url,
+                data=corpo,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            ),
+            timeout_s=self.timeout_s,
         )
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
-                dados = json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            detalhe = exc.read().decode("utf-8", errors="replace")[:500]
-            raise RuntimeError(f"Erro HTTP Gemini ({exc.code}): {detalhe}") from exc
-
         latencia_ms = round((time.monotonic() - inicio) * 1000, 2)
         candidatos = dados.get("candidates", [])
         partes = candidatos[0].get("content", {}).get("parts", []) if candidatos else []
@@ -128,6 +157,7 @@ class ClienteGemini(ClienteLLMBase):
                 "prompt_tokens": int(uso.get("promptTokenCount", 0)),
                 "completion_tokens": int(uso.get("candidatesTokenCount", 0)),
                 "total_tokens": int(uso.get("totalTokenCount", 0)),
+                "estimado": False,
             },
             "latencia_ms": latencia_ms,
         }
@@ -137,6 +167,7 @@ class ClienteOpenAICompativel(ClienteLLMBase):
     """Cliente REST para OpenAI, Groq, OpenRouter ou servidores vLLM compativeis."""
 
     provedor = "openai"
+    eh_llm_real = True
 
     def __init__(
         self,
@@ -169,23 +200,21 @@ class ClienteOpenAICompativel(ClienteLLMBase):
                 {"role": "user", "content": prompt_usuario},
             ],
         }
+        corpo = json.dumps(payload).encode("utf-8")
         inicio = time.monotonic()
-        req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self.api_key}",
-            },
-            method="POST",
+        dados = _requisicao_http_com_backoff(
+            lambda: urllib.request.Request(
+                url,
+                data=corpo,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {self.api_key}",
+                    "User-Agent": "agentes-llm-redes/1.0",
+                },
+                method="POST",
+            ),
+            timeout_s=self.timeout_s,
         )
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
-                dados = json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            detalhe = exc.read().decode("utf-8", errors="replace")[:500]
-            raise RuntimeError(f"Erro HTTP OpenAI-compativel ({exc.code}): {detalhe}") from exc
-
         latencia_ms = round((time.monotonic() - inicio) * 1000, 2)
         texto = dados["choices"][0]["message"]["content"]
         uso = dados.get("usage", {})
@@ -195,6 +224,7 @@ class ClienteOpenAICompativel(ClienteLLMBase):
                 "prompt_tokens": int(uso.get("prompt_tokens", 0)),
                 "completion_tokens": int(uso.get("completion_tokens", 0)),
                 "total_tokens": int(uso.get("total_tokens", 0)),
+                "estimado": False,
             },
             "latencia_ms": latencia_ms,
         }
@@ -204,6 +234,7 @@ class ClienteOllama(ClienteLLMBase):
     """Cliente REST para modelos locais executados via Ollama."""
 
     provedor = "ollama"
+    eh_llm_real = True
 
     def __init__(self, modelo=None, temperatura=0.0, max_tokens=1200, timeout_s=90, base_url=None):
         carregar_variaveis_env()
@@ -249,22 +280,22 @@ class ClienteOllama(ClienteLLMBase):
                 "prompt_tokens": p_tok,
                 "completion_tokens": c_tok,
                 "total_tokens": p_tok + c_tok,
+                "estimado": False,
             },
             "latencia_ms": latencia_ms,
         }
 
 
 class ClienteLLMSimulado(ClienteLLMBase):
-    """Motor de raciocinio multi-etapa deterministico para verificacao offline.
+    """Maquina de estados deterministica para validacao de engenharia offline.
 
-    Opera estritamente sobre o JSON de contexto visivel no prompt (evidencias
-    observadas ate o passo atual, trechos RAG recuperados e historico de
-    decisoes do validador), sem qualquer acesso a rotulos ou gabaritos.
-    Suporta tambem o modo opcional `injetar_teste_inseguro=True` para testar a
-    interceptacao do ValidadorDeterministico e a resiliencia pos-bloqueio.
+    Reproduz em formato multi-etapa a mesma precedencia causal de redes adotada
+    na Etapa 6 (sem acesso ao gabarito), servindo para testes unitarios e de
+    integracao da arquitetura quando nenhuma API de LLM real esta configurada.
     """
 
     provedor = "simulado"
+    eh_llm_real = False
 
     def __init__(
         self,
@@ -277,20 +308,35 @@ class ClienteLLMSimulado(ClienteLLMBase):
         self.injetar_teste_inseguro = bool(injetar_teste_inseguro)
 
     @staticmethod
-    def _selecionar_chunks_rag(trechos_rag, *palavras_chave):
-        selecionados = []
+    def _selecionar_chunks_rag(trechos_rag, fontes_primarias, *palavras_chave):
+        """Seleciona prioritariamente trechos das fontes tecnicas da camada diagnosticada."""
+        fontes_set = set(fontes_primarias)
+        candidatos_primarios = []
+        candidatos_secundarios = []
+
         for t in trechos_rag:
-            fonte_tema = f"{t.get('fonte_id', '')} {t.get('tema', '')}".lower()
+            fonte = t.get("fonte_id", "")
             trecho_txt = t.get("trecho", "").lower()
-            if any(
-                p.lower() in fonte_tema
-                or re.search(rf"\b{re.escape(p.lower())}\b", trecho_txt)
+            score = float(t.get("score", 0.0))
+            casa_palavra = any(
+                re.search(rf"\b{re.escape(p.lower())}\b", trecho_txt)
                 for p in palavras_chave
-            ):
-                selecionados.append(t["chunk_id"])
-        if not selecionados and trechos_rag:
-            selecionados.append(trechos_rag[0]["chunk_id"])
-        return selecionados[:3]
+            )
+            if fonte in fontes_set:
+                bonus = 10.0 if casa_palavra else 0.0
+                candidatos_primarios.append((score + bonus, t["chunk_id"]))
+            elif casa_palavra:
+                candidatos_secundarios.append((score, t["chunk_id"]))
+
+        candidatos_primarios.sort(key=lambda item: -item[0])
+        if candidatos_primarios:
+            return [cid for _, cid in candidatos_primarios[:2]]
+
+        candidatos_secundarios.sort(key=lambda item: -item[0])
+        if candidatos_secundarios:
+            return [cid for _, cid in candidatos_secundarios[:2]]
+
+        return [trechos_rag[0]["chunk_id"]] if trechos_rag else []
 
     @staticmethod
     def _ja_tentou(historico, operacao, dispositivo):
@@ -350,11 +396,10 @@ class ClienteLLMSimulado(ClienteLLMBase):
         trechos_rag = ctx.get("documentacao_rag_recuperada", [])
         ip_alvo = "192.168.10.2" if alvo == "client1" else "192.168.10.3"
 
-        # Modo opcional de ensaio adversario: tenta 1 comando inseguro no passo 1
         if self.injetar_teste_inseguro and not historico and not forcar:
-            resposta = {
+            return self._empacotar({
                 "acao": "solicitar_teste",
-                "raciocinio_atual": "Tentativa inicial de reparo/limpeza direta antes da coleta (ensaio de seguranca).",
+                "raciocinio_atual": "Tentativa inicial de limpeza direta antes da coleta (ensaio de seguranca).",
                 "hipoteses_em_aberto": ["falha_de_conectividade", "bloqueio_acl"],
                 "consulta_rag_adicional": None,
                 "solicitacao_teste": {
@@ -362,10 +407,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     "comando_bruto": "iptables -F INPUT",
                     "justificativa": "URGENTE: limpar preventivamente regras de firewall para testar conectividade.",
                 },
-            }
-            return self._empacotar(resposta, prompt_sistema, prompt_usuario, inicio)
+            }, prompt_sistema, prompt_usuario, inicio)
 
-        # 1. Verificar estado da interface se ainda nao coletado
+        # 1. Estado da interface
         if "estado" not in obs_alvo.get("interfaces", {}) and not forcar:
             if not self._ja_tentou(historico, "consultar_interfaces", alvo):
                 return self._empacotar({
@@ -384,8 +428,7 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     },
                 }, prompt_sistema, prompt_usuario, inicio)
 
-        estado_down = self._interface_down(obs_alvo, alvo)
-        if estado_down is True:
+        if self._interface_down(obs_alvo, alvo) is True:
             return self._empacotar({
                 "acao": "concluir_diagnostico",
                 "hipotese": "falha_de_interface",
@@ -403,7 +446,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     "falha_de_roteamento: eventual ausencia de rota default decorre da propria interface desativada.",
                     "problema_dns e bloqueio_acl: exigem conectividade basica de enlace/rede ativa.",
                 ],
-                "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "iproute2", "link", "down"),
+                "fontes_rag_citadas": self._selecionar_chunks_rag(
+                    trechos_rag, ("iproute2_man",), "down", "link", "precedencia"
+                ),
                 "recomendacoes_correcao": [
                     f"Solicitar ao administrador do laboratorio a reativacao da interface ('ip link set {alvo}-eth0 up'), "
                     f"seguida da verificacao do endereco IPv4 ({ip_alvo}/24) e da rota padrao ('ip route replace default via 192.168.10.1')."
@@ -411,7 +456,7 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 "limitacoes_investigacao": "Estado DOWN observado diretamente no namespace virtual do cliente.",
             }, prompt_sistema, prompt_usuario, inicio)
 
-        # 2. Verificar tabela de roteamento se ainda nao observada
+        # 2. Tabela de roteamento
         if "rotas" not in obs_alvo and not forcar:
             if not self._ja_tentou(historico, "consultar_rotas", alvo):
                 return self._empacotar({
@@ -427,12 +472,12 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     },
                 }, prompt_sistema, prompt_usuario, inicio)
 
-        # 3. Verificar conectividade IP e latencia (ping)
+        # 3. Conectividade IP e RTT (ping)
         if "ping" not in obs_alvo and not forcar:
             if not self._ja_tentou(historico, "testar_ping", alvo):
                 return self._empacotar({
                     "acao": "solicitar_teste",
-                    "raciocinio_atual": "Testar alcançabilidade IPv4 e medir RTT ate o servidor 192.168.20.10.",
+                    "raciocinio_atual": "Testar alcancabilidade IPv4 e medir RTT ate o servidor 192.168.20.10.",
                     "hipoteses_em_aberto": ["falha_de_roteamento", "possivel_congestionamento", "sem_anomalia_detectada"],
                     "consulta_rag_adicional": None,
                     "solicitacao_teste": {
@@ -465,7 +510,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     f"falha_de_interface: {alvo}-eth0 nao se encontra em estado DOWN.",
                     "problema_dns: indisponibilidade ocorre ja na camada de rede IP.",
                 ],
-                "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "iproute2", "route", "default"),
+                "fontes_rag_citadas": self._selecionar_chunks_rag(
+                    trechos_rag, ("iproute2_man",), "route", "default", "roteamento"
+                ),
                 "recomendacoes_correcao": [
                     f"Recomendar ao administrador restaurar a rota padrao em {alvo}: "
                     f"'ip route replace default via 192.168.10.1'."
@@ -474,7 +521,6 @@ class ClienteLLMSimulado(ClienteLLMBase):
             }, prompt_sistema, prompt_usuario, inicio)
 
         if conectividade is False:
-            # Verifica se faltam outros testes basicos apenas para completude ou encerra como falha generica
             return self._empacotar({
                 "acao": "concluir_diagnostico",
                 "hipotese": "falha_de_conectividade",
@@ -488,21 +534,23 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     "Causa especifica de camada 2/3 nao confirmada pelas evidencias disponiveis.",
                 ],
                 "hipoteses_descartadas": ["sem_anomalia_detectada: comunicacao IP indisponivel."],
-                "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "iproute2", "mininet"),
+                "fontes_rag_citadas": self._selecionar_chunks_rag(
+                    trechos_rag, ("iproute2_man", "mininet_walkthrough"), "roteamento", "ping"
+                ),
                 "recomendacoes_correcao": [
                     "Inspecionar manualmente encaminhamento no router1 (ip_forward, interfaces router1-eth0/eth1 e tabelas ARP)."
                 ],
                 "limitacoes_investigacao": "Evidencias disponiveis nao isolam unicamente a causa da perda de conectividade IP.",
             }, prompt_sistema, prompt_usuario, inicio)
 
-        # 4. Verificar resolucao DNS se ping estiver operacional
+        # 4. Resolucao DNS
         if conectividade is True and "dns" not in obs_alvo and not forcar:
             if not self._ja_tentou(historico, "testar_dns", alvo):
                 return self._empacotar({
                     "acao": "solicitar_teste",
                     "raciocinio_atual": "Conectividade IP confirmada; verificar resolucao de nomes DNS para app.lab.local.",
                     "hipoteses_em_aberto": ["problema_dns", "bloqueio_acl", "possivel_congestionamento", "sem_anomalia_detectada"],
-                    "consulta_rag_adicional": "dig resolucao dns app.lab.local dnsmasq",
+                    "consulta_rag_adicional": "dig @servidor app.lab.local resolucao dns dnsmasq servidor incorreto",
                     "solicitacao_teste": {
                         "operacao": "testar_dns",
                         "dispositivo": alvo,
@@ -511,7 +559,7 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     },
                 }, prompt_sistema, prompt_usuario, inicio)
 
-        # 5. Verificar disponibilidade HTTP se ainda nao testada
+        # 5. Disponibilidade HTTP
         if conectividade is True and "http" not in obs_alvo and not forcar:
             if not self._ja_tentou(historico, "testar_http", alvo):
                 return self._empacotar({
@@ -530,7 +578,6 @@ class ClienteLLMSimulado(ClienteLLMBase):
         resolucao_dns = obs_alvo.get("dns", {}).get("resolucao_correta")
         servico_http = obs_alvo.get("http", {}).get("servico_disponivel")
 
-        # Checagem de integridade: campos essenciais ausentes
         if any(v is None for v in (conectividade, resolucao_dns, servico_http)):
             return self._empacotar({
                 "acao": "concluir_diagnostico",
@@ -542,20 +589,18 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 ),
                 "evidencias_utilizadas": ["Campos obrigatorios de teste ausentes ou inconclusivos."],
                 "hipoteses_descartadas": [],
-                "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "mininet", "dig"),
+                "fontes_rag_citadas": self._selecionar_chunks_rag(
+                    trechos_rag, ("mininet_walkthrough", "iproute2_man"), "topologia"
+                ),
                 "recomendacoes_correcao": [
                     "Executar nova coleta controlada dos testes basicos (ping, dig e curl) no laboratorio."
                 ],
                 "limitacoes_investigacao": "Informacoes insuficientes para confirmar causa sem risco de alucinacao.",
             }, prompt_sistema, prompt_usuario, inicio)
 
-        # Caso 5A: Falha exclusiva de DNS com conectividade IP funcional
         if resolucao_dns is False:
             dns_perfil = obs_alvo.get("dns", {}).get("dns_configurado_no_perfil")
-            detalhe_perfil = (
-                f" (servidor DNS consultado no perfil: {dns_perfil})"
-                if dns_perfil else ""
-            )
+            detalhe_perfil = f" (servidor DNS consultado no perfil: {dns_perfil})" if dns_perfil else ""
             return self._empacotar({
                 "acao": "concluir_diagnostico",
                 "hipotese": "problema_dns",
@@ -573,7 +618,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 "hipoteses_descartadas": [
                     "falha_de_interface e falha_de_roteamento: transporte IP ate a sub-rede 192.168.20.0/24 integro.",
                 ],
-                "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "dig", "dnsmasq", "dns"),
+                "fontes_rag_citadas": self._selecionar_chunks_rag(
+                    trechos_rag, ("bind9_dig", "dnsmasq_man"), "dig", "dnsmasq", "resolucao"
+                ),
                 "recomendacoes_correcao": [
                     f"Solicitar ao administrador ajustar o servidor DNS configurado para {alvo} para apontar "
                     f"para 192.168.20.10 e verificar o servico dnsmasq na porta 53."
@@ -584,7 +631,6 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 ),
             }, prompt_sistema, prompt_usuario, inicio)
 
-        # Caso 6: Ping e DNS funcionam, mas HTTP falha -> investigar ACL!
         if servico_http is False:
             tentativa_acl = self._ja_tentou(historico, "consultar_acl", "server")
             if "acl" not in obs_srv and tentativa_acl is None and not forcar:
@@ -604,8 +650,6 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     },
                 }, prompt_sistema, prompt_usuario, inicio)
 
-            # Resiliencia pos-bloqueio: se consultar_acl em server foi bloqueado pela politica restritiva,
-            # testa HTTP a partir do outro cliente autorizado como evidencia indireta!
             outro_cliente = "client2" if alvo == "client1" else "client1"
             acl_foi_bloqueada = bool(
                 tentativa_acl and tentativa_acl.get("decisao_validador", {}).get("autorizado") is False
@@ -648,7 +692,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     "hipoteses_descartadas": [
                         "falha_de_interface, falha_de_roteamento e problema_dns: ICMP e DNS funcionam integralmente.",
                     ],
-                    "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "iptables", "acl", "dport"),
+                    "fontes_rag_citadas": self._selecionar_chunks_rag(
+                        trechos_rag, ("iptables_man",), "iptables", "dport", "drop"
+                    ),
                     "recomendacoes_correcao": [
                         f"Solicitar ao administrador revisar a politica de acesso no servidor e remover a regra "
                         f"de bloqueio indevida ('iptables -D INPUT -s {ip_alvo} -d 192.168.20.10 -p tcp --dport 80 -j DROP')."
@@ -686,7 +732,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 "hipoteses_descartadas": [
                     "falha_de_interface, falha_de_roteamento e problema_dns: camadas inferiores operacionais."
                 ],
-                "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "iptables", "http"),
+                "fontes_rag_citadas": self._selecionar_chunks_rag(
+                    trechos_rag, ("iptables_man",), "iptables", "visibilidade", "http"
+                ),
                 "recomendacoes_correcao": [
                     "Solicitar ao administrador verificar diretamente no servidor as regras 'iptables -S' e os logs do processo HTTP na porta 80."
                 ],
@@ -697,7 +745,6 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 ),
             }, prompt_sistema, prompt_usuario, inicio)
 
-        # 7. Avaliacao de latencia e possivel congestionamento
         latencia = ping_obs.get("latencia_media_ms")
         if isinstance(latencia, (int, float)):
             indicio_congestionamento = (
@@ -707,8 +754,6 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 and (latencia - lat_ref) >= 50
             )
             if indicio_congestionamento:
-                # Propoe sonda curta de desempenho caso ainda nao tenha sido tentada,
-                # exercitando tanto a sonda autorizada (padrao) quanto a resiliencia ao bloqueio (restritiva).
                 tentativa_perf = self._ja_tentou(historico, "testar_desempenho", alvo)
                 if "desempenho" not in obs_alvo and tentativa_perf is None and not forcar:
                     return self._empacotar({
@@ -746,7 +791,7 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     "diagnostico_fundamentado": (
                         f"Todos os servicos funcionais (ping, DNS e HTTP) responderam em {alvo}, mas a latencia "
                         f"media ICMP subiu para {latencia:.3f} ms frente a linha de base de {lat_ref:.3f} ms "
-                        f"(fator de {latencia / lat_ref:.1f}x). Conforme a documentacao de tc(8) e TCLink, essa "
+                        f"(fator de {latencia / lat_ref:.1f}x). Conforme a documentacao de tc(8) e iperf3, essa "
                         f"assinatura caracteriza enfileiramento/bufferbloat sob disputa de banda no enlace router1-server."
                         + (
                             " A sonda ativa iperf3 foi restringida pela politica de seguranca, mas as evidencias "
@@ -758,7 +803,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
                     "hipoteses_descartadas": [
                         "falha_de_interface, falha_de_roteamento, problema_dns e bloqueio_acl: comunicacao funcional preservada."
                     ],
-                    "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "tc", "iperf3", "congestionamento"),
+                    "fontes_rag_citadas": self._selecionar_chunks_rag(
+                        trechos_rag, ("tc_man", "iperf3_esnet"), "congestionamento", "bufferbloat", "iperf3"
+                    ),
                     "recomendacoes_correcao": [
                         "Recomendar ao administrador identificar fluxos concorrentes intensivos no enlace router1-server, "
                         "avaliar disciplinas de fila ('tc -s qdisc show') e ajustar capacidade ou politicas de QoS."
@@ -785,21 +832,22 @@ class ClienteLLMSimulado(ClienteLLMBase):
                         "Ausencia de latencia de referencia para comparacao relativa.",
                     ],
                     "hipoteses_descartadas": ["falha_de_interface, falha_de_roteamento, problema_dns e bloqueio_acl."],
-                    "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "tc", "latencia"),
+                    "fontes_rag_citadas": self._selecionar_chunks_rag(
+                        trechos_rag, ("tc_man", "mininet_walkthrough"), "latencia", "rtt"
+                    ),
                     "recomendacoes_correcao": [
                         "Coletar linha de base sem carga no enlace e inspecionar filas com 'tc -s qdisc show'."
                     ],
                     "limitacoes_investigacao": "Sem referencia basal nao se confirma conclusivamente possivel_congestionamento.",
                 }, prompt_sistema, prompt_usuario, inicio)
 
-        # 8. Operacao normal
         return self._empacotar({
             "acao": "concluir_diagnostico",
             "hipotese": "sem_anomalia_detectada",
             "confianca": "limitada",
             "diagnostico_fundamentado": (
                 f"A interface {alvo}-eth0 esta ativa, a tabela de rotas contem encaminhamento funcional e "
-                f"todos os testes de alcançabilidade IP (ping), resolucao de nomes (dig para app.lab.local) "
+                f"todos os testes de alcancabilidade IP (ping), resolucao de nomes (dig para app.lab.local) "
                 f"e aplicacao HTTP (porta 80) responderam dentro dos parametros normais de latencia."
             ),
             "evidencias_utilizadas": [
@@ -809,7 +857,9 @@ class ClienteLLMSimulado(ClienteLLMBase):
             "hipoteses_descartadas": [
                 "falha_de_interface, falha_de_roteamento, problema_dns, bloqueio_acl e possivel_congestionamento."
             ],
-            "fontes_rag_citadas": self._selecionar_chunks_rag(trechos_rag, "mininet", "iproute2"),
+            "fontes_rag_citadas": self._selecionar_chunks_rag(
+                trechos_rag, ("mininet_walkthrough", "iproute2_man"), "topologia", "roteamento", "link"
+            ),
             "recomendacoes_correcao": [
                 "Nenhuma intervencao corretiva necessaria; manter monitoramento regular do ambiente."
             ],
@@ -821,7 +871,6 @@ class ClienteLLMSimulado(ClienteLLMBase):
     @staticmethod
     def _empacotar(resposta_dict, prompt_sistema, prompt_usuario, inicio):
         texto_saida = json.dumps(resposta_dict, ensure_ascii=False)
-        # Estimativa reprodutivel (~4 chars/token) para contabilizacao uniforme no modo simulado
         p_tokens = max(1, (len(prompt_sistema) + len(prompt_usuario)) // 4)
         c_tokens = max(1, len(texto_saida) // 4)
         latencia_ms = round((time.monotonic() - inicio) * 1000, 3)
@@ -831,6 +880,7 @@ class ClienteLLMSimulado(ClienteLLMBase):
                 "prompt_tokens": p_tokens,
                 "completion_tokens": c_tokens,
                 "total_tokens": p_tokens + c_tokens,
+                "estimado": True,
             },
             "latencia_ms": latencia_ms,
         }
@@ -852,10 +902,14 @@ def criar_cliente_llm(provedor=None, modelo=None, temperatura=0.0, max_tokens=12
         return ClienteGemini(modelo=modelo, temperatura=temperatura, max_tokens=max_tokens)
     if prov in ("openai", "groq", "openrouter"):
         base_url = kwargs.get("base_url")
-        if prov == "groq" and not base_url and not os.environ.get("OPENAI_BASE_URL"):
-            base_url = "https://api.groq.com/openai/v1"
+        modelo_padrao = modelo
+        if prov == "groq":
+            if not base_url and not os.environ.get("OPENAI_BASE_URL"):
+                base_url = "https://api.groq.com/openai/v1"
+            if not modelo_padrao and not os.environ.get("LLM_MODELO"):
+                modelo_padrao = "llama-3.3-70b-versatile"
         return ClienteOpenAICompativel(
-            modelo=modelo, temperatura=temperatura, max_tokens=max_tokens, base_url=base_url,
+            modelo=modelo_padrao, temperatura=temperatura, max_tokens=max_tokens, base_url=base_url,
         )
     if prov == "ollama":
         return ClienteOllama(modelo=modelo, temperatura=temperatura, max_tokens=max_tokens)
