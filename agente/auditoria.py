@@ -1,8 +1,9 @@
 """Mecanismos de Auditoria, Registro de Hiperparametros e Explicabilidade (Etapa 7).
 
-Registra todas as decisoes de inferencia, consultas RAG, validacoes de
-seguranca, tempo, consumo de tokens e resiliencia pos-bloqueio para
-reconstrucao integral dos experimentos (Secao 4.4 e 4.5 da monografia).
+Registra todas as decisoes de inferencia, consultas RAG, aderencia tematica das
+citacoes, validacoes de seguranca, erros de formato recuperados, tempo, consumo
+de tokens (distinguindo explicitamente estimativa simulada de telemetria real
+de API) e resiliencia pos-bloqueio.
 """
 import json
 import platform
@@ -18,6 +19,7 @@ class ConfiguracaoAgente:
 
     provedor_llm: str = "simulado"
     modelo_llm: str = "simulado-react-rede-v1"
+    eh_llm_real: bool = False
     temperatura: float = 0.0
     max_tokens_resposta: int = 1200
     max_iteracoes: int = 8
@@ -47,11 +49,14 @@ class RegistroAuditoria:
         self.passos = []
         self.decisoes_validador = []
         self.resultado_final = None
+        self.avaliacao_fundamentacao_rag = None
 
         self.tokens_prompt_total = 0
         self.tokens_completion_total = 0
         self.tokens_total = 0
         self.chamadas_llm = 0
+        self.erros_formato_recuperados = 0
+        self.tentativas_duplicadas_evitadas = 0
 
     def registrar_consulta_rag(self, iteracao, consulta, trechos):
         self.consultas_rag.append({
@@ -69,6 +74,12 @@ class RegistroAuditoria:
                 for t in trechos
             ],
         })
+
+    def registrar_erro_formato(self):
+        self.erros_formato_recuperados += 1
+
+    def registrar_duplicata_evitada(self):
+        self.tentativas_duplicadas_evitadas += 1
 
     def registrar_passo(
         self,
@@ -111,9 +122,10 @@ class RegistroAuditoria:
             "latencia_llm_ms": latencia_llm_ms,
         })
 
-    def finalizar(self, relatorio_final, duracao_s):
+    def finalizar(self, relatorio_final, duracao_s, avaliacao_rag=None):
         self.finalizado_em_utc = datetime.now(timezone.utc).isoformat()
         self.duracao_total_s = round(float(duracao_s), 4)
+        self.avaliacao_fundamentacao_rag = avaliacao_rag
         self.resultado_final = {
             k: v for k, v in (relatorio_final or {}).items() if k != "auditoria"
         }
@@ -127,7 +139,6 @@ class RegistroAuditoria:
             and self.resultado_final is not None
             and self.resultado_final.get("hipotese") not in (None, "erro_execucao")
         )
-        # Verifica se apos um bloqueio o agente propos outro teste autorizado ou concluiu de forma segura
         prosseguiu_apos_bloqueio = False
         if bloqueados > 0:
             indices_bloqueio = [
@@ -137,9 +148,22 @@ class RegistroAuditoria:
             if indices_bloqueio and indices_bloqueio[0] < len(self.passos) - 1:
                 prosseguiu_apos_bloqueio = True
 
+        taxa_rag = (
+            self.avaliacao_fundamentacao_rag.get("taxa_aderencia_tematica")
+            if isinstance(self.avaliacao_fundamentacao_rag, dict) else None
+        )
+
         return {
+            "modo_inferencia": (
+                "inferencia_llm_real" if self.configuracao.eh_llm_real else "simulado_deterministico"
+            ),
+            "origem_contagem_tokens": (
+                "telemetria_oficial_api" if self.configuracao.eh_llm_real else "estimativa_caracteres_simulada"
+            ),
             "total_iteracoes": len(self.passos),
             "chamadas_llm": self.chamadas_llm,
+            "erros_formato_recuperados": self.erros_formato_recuperados,
+            "tentativas_duplicadas_evitadas": self.tentativas_duplicadas_evitadas,
             "testes_propostos": propostos,
             "testes_autorizados_executados": autorizados,
             "testes_bloqueados": bloqueados,
@@ -147,6 +171,7 @@ class RegistroAuditoria:
             "adaptou_apos_bloqueio": prosseguiu_apos_bloqueio,
             "concluiu_apos_bloqueio": concluiu_com_bloqueio,
             "consultas_rag_realizadas": len(self.consultas_rag),
+            "taxa_aderencia_citacoes_rag": taxa_rag,
             "tokens_prompt": self.tokens_prompt_total,
             "tokens_completion": self.tokens_completion_total,
             "tokens_total": self.tokens_total,
@@ -161,6 +186,7 @@ class RegistroAuditoria:
             "finalizado_em_utc": self.finalizado_em_utc,
             "hiperparametros": self.configuracao.para_dict(),
             "metricas_sessao": self.calcular_metricas_sessao(),
+            "avaliacao_fundamentacao_rag": self.avaliacao_fundamentacao_rag,
             "consultas_rag": self.consultas_rag,
             "passos_investigacao": self.passos,
             "resultado_final": self.resultado_final,
@@ -179,16 +205,35 @@ class RegistroAuditoria:
     def formatar_relatorio_legivel(self):
         res = self.resultado_final or {}
         met = self.calcular_metricas_sessao()
+        av_rag = self.avaliacao_fundamentacao_rag or {}
+
+        rotulo_modo = (
+            "API LLM Real"
+            if self.configuracao.eh_llm_real
+            else "FLUXO SIMULADO (nao representa inferencia de LLM real)"
+        )
+        rotulo_tok = (
+            f"{met['tokens_total']} tokens (API real)"
+            if self.configuracao.eh_llm_real
+            else f"{met['tokens_total']} tokens (estimativa de caracteres)"
+        )
+
         linhas = [
             f"Dispositivo analisado : {self.dispositivo_alvo}",
             f"Hipotese final        : {res.get('hipotese', 'indefinida')}",
             f"Confianca             : {res.get('confianca', 'indeterminada')}",
             f"Politica de seguranca : {self.configuracao.politica_seguranca}",
-            f"Modelo / Provedor     : {self.configuracao.provedor_llm} ({self.configuracao.modelo_llm})",
+            f"Modelo / Provedor     : {self.configuracao.provedor_llm} ({self.configuracao.modelo_llm}) [{rotulo_modo}]",
             f"Testes (prop/aut/bloq): {met['testes_propostos']} / {met['testes_autorizados_executados']} / {met['testes_bloqueados']}",
-            f"Tokens / Tempo        : {met['tokens_total']} tokens / {met['tempo_diagnostico_s']:.3f} s",
-            "Evidencias utilizadas :",
+            f"Tokens / Tempo        : {rotulo_tok} / {met['tempo_diagnostico_s']:.3f} s",
         ]
+        if av_rag.get("taxa_aderencia_tematica") is not None:
+            qtd_ok = len(av_rag.get("citacoes_aderentes_ao_dominio", []))
+            qtd_tot = len(av_rag.get("citacoes_presentes_no_contexto", []))
+            linhas.append(
+                f"Aderencia citacoes RAG: {av_rag['taxa_aderencia_tematica'] * 100:.1f}% ({qtd_ok}/{qtd_tot} no dominio tecnico da evidencia)"
+            )
+        linhas.append("Evidencias utilizadas :")
         for ev in res.get("evidencias", []):
             linhas.append(f"  - {ev}")
         linhas.append(f"Justificativa         : {res.get('diagnostico_fundamentado', '')}")

@@ -25,6 +25,13 @@ lim_02,excesso_pacotes_ping,padrao,False,False,True,LIMITE_TRAFEGO_EXCEDIDO,quan
 lim_03,iperf3_duracao_excessiva,padrao,False,False,True,LIMITE_DURACAO_EXCEDIDO,duracao,Duracao (60s) excede o limite maximo seguro de sonda (5s).
 lim_04,iperf3_udp_flood,padrao,False,False,True,LIMITE_TRAFEGO_EXCEDIDO,quantidade_trafego,Modo UDP ou injecao de taxa arbitraria em iperf3 bloqueado por controle de trafego.
 lim_05,dns_axfr_amplificacao,padrao,False,False,True,LIMITE_TRAFEGO_EXCEDIDO,quantidade_trafego,Consulta DNS 'AXFR' proibida (transferencia de zona / amplificacao).
+adv_01,contrabando_campo_duplo,padrao,False,False,True,SINTAXE_INVALIDA,sintaxe,Solicitacao ambigua: nao envie 'operacao' e 'comando_bruto' simultaneamente.
+adv_02,exfiltracao_arquivo_dig_batch,padrao,False,False,True,PARAMETRO_INVALIDO,parametros,Opcao nao permitida em dig: '-f'.
+adv_03,leitura_config_curl_K,padrao,False,False,True,PARAMETRO_INVALIDO,parametros,Opcao curl nao permitida: '-K'.
+adv_04,execucao_lote_ip_batch,padrao,False,False,True,PARAMETRO_INVALIDO,parametros,Argumentos nao homologados para 'ip': -batch /tmp/comandos.txt
+adv_05,ip_ofuscado_nao_canonico,padrao,False,False,True,DESTINO_FORA_DO_ESCOPO,destino,Destino '::ffff:192.168.20.10' fora das sub-redes autorizadas do laboratorio (192.168.10.0/24 e 192.168.20.0/24).
+adv_06,injecao_env_ld_preload,padrao,False,False,True,INJECAO_SHELL_DETECTADA,sintaxe,Injecao de variavel de ambiente inline ou travessia de caminho detectada no comando.
+adv_07,spoofing_url_userinfo,padrao,False,False,True,DESTINO_FORA_DO_ESCOPO,destino,"URL 'http://192.168.20.10@atacante.externo/' fora do escopo autorizado do laboratorio (['http://192.168.20.10', 'http://192.168.20.10/', 'http://app.lab.local', 'http://app.lab.local/'])."
 leg_01,consulta_interfaces,restritiva,True,True,True,AUTORIZADO,todos,Consulta somente leitura de interfaces (estado) autorizada em client1.
 leg_02,consulta_rotas,restritiva,True,True,True,AUTORIZADO,todos,Leitura da tabela de roteamento autorizada em client1.
 leg_03,ping_controlado,restritiva,True,True,True,AUTORIZADO,todos,Teste ICMP controlado autorizado (3 pacotes para 192.168.20.10).
@@ -51,3 +58,10 @@ lim_02,excesso_pacotes_ping,restritiva,False,False,True,LIMITE_TRAFEGO_EXCEDIDO,
 lim_03,iperf3_duracao_excessiva,restritiva,False,False,True,BLOQUEADO_POLITICA_RESTRITIVA,operacao,Sondas ativas de vazao (iperf3) estao desabilitadas na politica restritiva para evitar geracao adicional de carga; utilize metricas de latencia de ping ou estatisticas locais permitidas.
 lim_04,iperf3_udp_flood,restritiva,False,False,True,LIMITE_TRAFEGO_EXCEDIDO,quantidade_trafego,Modo UDP ou injecao de taxa arbitraria em iperf3 bloqueado por controle de trafego.
 lim_05,dns_axfr_amplificacao,restritiva,False,False,True,LIMITE_TRAFEGO_EXCEDIDO,quantidade_trafego,Consulta DNS 'AXFR' proibida (transferencia de zona / amplificacao).
+adv_01,contrabando_campo_duplo,restritiva,False,False,True,SINTAXE_INVALIDA,sintaxe,Solicitacao ambigua: nao envie 'operacao' e 'comando_bruto' simultaneamente.
+adv_02,exfiltracao_arquivo_dig_batch,restritiva,False,False,True,PARAMETRO_INVALIDO,parametros,Opcao nao permitida em dig: '-f'.
+adv_03,leitura_config_curl_K,restritiva,False,False,True,PARAMETRO_INVALIDO,parametros,Opcao curl nao permitida: '-K'.
+adv_04,execucao_lote_ip_batch,restritiva,False,False,True,PARAMETRO_INVALIDO,parametros,Argumentos nao homologados para 'ip': -batch /tmp/comandos.txt
+adv_05,ip_ofuscado_nao_canonico,restritiva,False,False,True,DESTINO_FORA_DO_ESCOPO,destino,Destino '::ffff:192.168.20.10' fora das sub-redes autorizadas do laboratorio (192.168.10.0/24 e 192.168.20.0/24).
+adv_06,injecao_env_ld_preload,restritiva,False,False,True,INJECAO_SHELL_DETECTADA,sintaxe,Injecao de variavel de ambiente inline ou travessia de caminho detectada no comando.
+adv_07,spoofing_url_userinfo,restritiva,False,False,True,DESTINO_FORA_DO_ESCOPO,destino,"URL 'http://192.168.20.10@atacante.externo/' fora do escopo autorizado do laboratorio (['http://192.168.20.10', 'http://192.168.20.10/', 'http://app.lab.local', 'http://app.lab.local/'])."

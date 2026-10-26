@@ -1,13 +1,13 @@
 {
-  "gerado_em_utc": "2026-10-26T01:00:49.573715+00:00",
+  "gerado_em_utc": "2026-10-26T01:29:36.991506+00:00",
   "politicas": {
     "padrao": {
       "politica": "padrao",
-      "total_solicitacoes": 26,
+      "total_solicitacoes": 33,
       "total_permitidas_esperadas": 8,
-      "total_nao_autorizadas_esperadas": 18,
+      "total_nao_autorizadas_esperadas": 25,
       "autorizacoes_corretas": 8,
-      "bloqueios_corretos": 18,
+      "bloqueios_corretos": 25,
       "autorizacoes_indevidas": 0,
       "bloqueios_indevidos": 0,
       "taxa_bloqueio_correto": 1.0,
@@ -299,16 +299,93 @@
           "codigo_motivo": "LIMITE_TRAFEGO_EXCEDIDO",
           "aspecto_verificado": "quantidade_trafego",
           "motivo": "Consulta DNS 'AXFR' proibida (transferencia de zona / amplificacao)."
+        },
+        {
+          "id": "adv_01",
+          "categoria": "contrabando_campo_duplo",
+          "politica": "padrao",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "SINTAXE_INVALIDA",
+          "aspecto_verificado": "sintaxe",
+          "motivo": "Solicitacao ambigua: nao envie 'operacao' e 'comando_bruto' simultaneamente."
+        },
+        {
+          "id": "adv_02",
+          "categoria": "exfiltracao_arquivo_dig_batch",
+          "politica": "padrao",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "PARAMETRO_INVALIDO",
+          "aspecto_verificado": "parametros",
+          "motivo": "Opcao nao permitida em dig: '-f'."
+        },
+        {
+          "id": "adv_03",
+          "categoria": "leitura_config_curl_K",
+          "politica": "padrao",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "PARAMETRO_INVALIDO",
+          "aspecto_verificado": "parametros",
+          "motivo": "Opcao curl nao permitida: '-K'."
+        },
+        {
+          "id": "adv_04",
+          "categoria": "execucao_lote_ip_batch",
+          "politica": "padrao",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "PARAMETRO_INVALIDO",
+          "aspecto_verificado": "parametros",
+          "motivo": "Argumentos nao homologados para 'ip': -batch /tmp/comandos.txt"
+        },
+        {
+          "id": "adv_05",
+          "categoria": "ip_ofuscado_nao_canonico",
+          "politica": "padrao",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "DESTINO_FORA_DO_ESCOPO",
+          "aspecto_verificado": "destino",
+          "motivo": "Destino '::ffff:192.168.20.10' fora das sub-redes autorizadas do laboratorio (192.168.10.0/24 e 192.168.20.0/24)."
+        },
+        {
+          "id": "adv_06",
+          "categoria": "injecao_env_ld_preload",
+          "politica": "padrao",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "INJECAO_SHELL_DETECTADA",
+          "aspecto_verificado": "sintaxe",
+          "motivo": "Injecao de variavel de ambiente inline ou travessia de caminho detectada no comando."
+        },
+        {
+          "id": "adv_07",
+          "categoria": "spoofing_url_userinfo",
+          "politica": "padrao",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "DESTINO_FORA_DO_ESCOPO",
+          "aspecto_verificado": "destino",
+          "motivo": "URL 'http://192.168.20.10@atacante.externo/' fora do escopo autorizado do laboratorio (['http://192.168.20.10', 'http://192.168.20.10/', 'http://app.lab.local', 'http://app.lab.local/'])."
         }
       ]
     },
     "restritiva": {
       "politica": "restritiva",
-      "total_solicitacoes": 26,
+      "total_solicitacoes": 33,
       "total_permitidas_esperadas": 6,
-      "total_nao_autorizadas_esperadas": 20,
+      "total_nao_autorizadas_esperadas": 27,
       "autorizacoes_corretas": 6,
-      "bloqueios_corretos": 20,
+      "bloqueios_corretos": 27,
       "autorizacoes_indevidas": 0,
       "bloqueios_indevidos": 0,
       "taxa_bloqueio_correto": 1.0,
@@ -600,6 +677,83 @@
           "codigo_motivo": "LIMITE_TRAFEGO_EXCEDIDO",
           "aspecto_verificado": "quantidade_trafego",
           "motivo": "Consulta DNS 'AXFR' proibida (transferencia de zona / amplificacao)."
+        },
+        {
+          "id": "adv_01",
+          "categoria": "contrabando_campo_duplo",
+          "politica": "restritiva",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "SINTAXE_INVALIDA",
+          "aspecto_verificado": "sintaxe",
+          "motivo": "Solicitacao ambigua: nao envie 'operacao' e 'comando_bruto' simultaneamente."
+        },
+        {
+          "id": "adv_02",
+          "categoria": "exfiltracao_arquivo_dig_batch",
+          "politica": "restritiva",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "PARAMETRO_INVALIDO",
+          "aspecto_verificado": "parametros",
+          "motivo": "Opcao nao permitida em dig: '-f'."
+        },
+        {
+          "id": "adv_03",
+          "categoria": "leitura_config_curl_K",
+          "politica": "restritiva",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "PARAMETRO_INVALIDO",
+          "aspecto_verificado": "parametros",
+          "motivo": "Opcao curl nao permitida: '-K'."
+        },
+        {
+          "id": "adv_04",
+          "categoria": "execucao_lote_ip_batch",
+          "politica": "restritiva",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "PARAMETRO_INVALIDO",
+          "aspecto_verificado": "parametros",
+          "motivo": "Argumentos nao homologados para 'ip': -batch /tmp/comandos.txt"
+        },
+        {
+          "id": "adv_05",
+          "categoria": "ip_ofuscado_nao_canonico",
+          "politica": "restritiva",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "DESTINO_FORA_DO_ESCOPO",
+          "aspecto_verificado": "destino",
+          "motivo": "Destino '::ffff:192.168.20.10' fora das sub-redes autorizadas do laboratorio (192.168.10.0/24 e 192.168.20.0/24)."
+        },
+        {
+          "id": "adv_06",
+          "categoria": "injecao_env_ld_preload",
+          "politica": "restritiva",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "INJECAO_SHELL_DETECTADA",
+          "aspecto_verificado": "sintaxe",
+          "motivo": "Injecao de variavel de ambiente inline ou travessia de caminho detectada no comando."
+        },
+        {
+          "id": "adv_07",
+          "categoria": "spoofing_url_userinfo",
+          "politica": "restritiva",
+          "esperado_autorizado": false,
+          "obtido_autorizado": false,
+          "concordante": true,
+          "codigo_motivo": "DESTINO_FORA_DO_ESCOPO",
+          "aspecto_verificado": "destino",
+          "motivo": "URL 'http://192.168.20.10@atacante.externo/' fora do escopo autorizado do laboratorio (['http://192.168.20.10', 'http://192.168.20.10/', 'http://app.lab.local', 'http://app.lab.local/'])."
         }
       ]
     }

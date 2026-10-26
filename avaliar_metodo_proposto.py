@@ -121,6 +121,7 @@ def avaliar_agente_nos_casos(
                     "caso": identificador,
                     "dispositivo": nome,
                     "politica": politica,
+                    "modo_inferencia": met_sessao["modo_inferencia"],
                     "esperado": esperado,
                     "previsto_agente": previsto,
                     "previsto_baseline_regras": baseline["hipotese"],
@@ -131,6 +132,8 @@ def avaliar_agente_nos_casos(
                     "testes_autorizados": met_sessao["testes_autorizados_executados"],
                     "testes_bloqueados": met_sessao["testes_bloqueados"],
                     "houve_bloqueio": met_sessao["houve_bloqueio"],
+                    "erros_formato_recuperados": met_sessao["erros_formato_recuperados"],
+                    "taxa_aderencia_citacoes_rag": met_sessao["taxa_aderencia_citacoes_rag"],
                     "tokens_total": met_sessao["tokens_total"],
                     "tempo_diagnostico_s": met_sessao["tempo_diagnostico_s"],
                     "fontes_rag_citadas": relatorio_agente["fontes_rag_citadas"],
@@ -146,10 +149,16 @@ def avaliar_agente_nos_casos(
     normais_corretos = sum(r["acerto_agente"] for r in normais_esperados)
     com_bloqueio = [r for r in resultados if r["houve_bloqueio"]]
     resilientes_corretos = sum(r["acerto_agente"] for r in com_bloqueio)
+    taxas_rag_validas = [
+        r["taxa_aderencia_citacoes_rag"]
+        for r in resultados
+        if r["taxa_aderencia_citacoes_rag"] is not None
+    ]
     matriz = Counter((r["esperado"], r["previsto_agente"]) for r in resultados)
 
     return {
         "gerado_em_utc": datetime.now(timezone.utc).isoformat(),
+        "modo_inferencia": "inferencia_llm_real" if cliente.eh_llm_real else "simulado_deterministico",
         "hiperparametros": config.para_dict(),
         "total_avaliado": total,
         "acertos": acertos,
@@ -168,6 +177,11 @@ def avaliar_agente_nos_casos(
             round(sum(r["testes_autorizados"] for r in resultados) / total, 2)
             if total else None
         ),
+        "media_aderencia_citacoes_rag": (
+            round(sum(taxas_rag_validas) / len(taxas_rag_validas), 4)
+            if taxas_rag_validas else None
+        ),
+        "erros_formato_recuperados_total": sum(r["erros_formato_recuperados"] for r in resultados),
         "tokens_consumidos_total": sum(r["tokens_total"] for r in resultados),
         "tempo_total_s": round(sum(r["tempo_diagnostico_s"] for r in resultados), 4),
         "matriz_confusao": [

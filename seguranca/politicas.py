@@ -5,6 +5,7 @@ permitidas, limites de duracao/volume de trafego e as duas configuracoes de
 politica previstas na Secao 4.4 da monografia ('padrao' e 'restritiva').
 """
 import ipaddress
+import re
 
 
 DISPOSITIVOS_AUTORIZADOS = ("client1", "client2", "router1", "server")
@@ -34,20 +35,22 @@ URLS_HTTP_AUTORIZADAS = frozenset({
 })
 PORTAS_IPERF3_AUTORIZADAS = frozenset({5201, 5202})
 
-# Metacaracteres de shell que indicam encadeamento, redirecionamento ou subshell
+# Metacaracteres de shell e caracteres de controle proibidos
 METACARACTERES_SHELL_PROIBIDOS = (
-    ";", "&&", "||", "|", "`", "$(", "${", ">", "<", "\n", "\r", "\x00", "&"
+    ";", "&&", "||", "|", "`", "$(", "${", ">", "<",
+    "\n", "\r", "\x00", "\x0b", "\x0c", "\x1b", "&",
 )
 
-# Binarios administrativos, destrutivos ou fora de escopo diagnostico
+# Binarios administrativos, destrutivos, wrappers de ambiente ou fora de escopo
 BINARIOS_ESTRITAMENTE_PROIBIDOS = frozenset({
     "rm", "mv", "cp", "dd", "mkfs", "mount", "umount", "chmod", "chown",
     "kill", "killall", "pkill", "reboot", "shutdown", "poweroff", "halt",
     "sudo", "su", "passwd", "useradd", "usermod", "userdel",
     "sh", "bash", "dash", "zsh", "python", "python3", "perl", "ruby", "lua",
-    "nc", "netcat", "ncat", "socat", "nmap", "hping3", "scapy",
-    "sysctl", "systemctl", "service", "ufw", "nft", "ovs-vsctl", "ovs-ofctl",
+    "nc", "netcat", "ncat", "socat", "nmap", "hping3", "scapy", "arping",
+    "sysctl", "systemctl", "service", "ufw", "nft", "ip6tables", "ovs-vsctl", "ovs-ofctl",
     "sed", "awk", "tee", "vi", "vim", "nano", "wget", "ssh", "scp",
+    "env", "nohup", "timeout", "watch", "xargs", "find", "tar", "cat", "head", "tail", "grep",
 })
 
 POLITICAS_SEGURANCA = {
@@ -178,15 +181,19 @@ POLITICAS_SEGURANCA = {
 }
 
 
+_PADRAO_IPV4_CANONICO = re.compile(r"^(?:0|[1-9]\d{0,2})(?:\.(?:0|[1-9]\d{0,2})){3}$")
+
+
 def ip_no_escopo_laboratorio(endereco_ip):
-    """Verifica se um endereco IPv4 pertence estritamente as sub-redes do laboratorio."""
-    if not isinstance(endereco_ip, str) or not endereco_ip.strip():
+    """Verifica se um endereco IPv4 canonico pertence as sub-redes do laboratorio."""
+    if not isinstance(endereco_ip, str):
+        return False
+    ip_limpo = endereco_ip.strip()
+    if ip_limpo != endereco_ip or not _PADRAO_IPV4_CANONICO.match(ip_limpo):
         return False
     try:
-        ip_obj = ipaddress.ip_address(endereco_ip.strip())
+        ip_obj = ipaddress.IPv4Address(ip_limpo)
     except ValueError:
-        return False
-    if not isinstance(ip_obj, ipaddress.IPv4Address):
         return False
     return any(ip_obj in rede for rede in SUBREDES_LABORATORIO)
 

