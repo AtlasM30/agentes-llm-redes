@@ -130,6 +130,12 @@ def main():
         action="store_true",
         help="Executa demonstracao em memoria caso logs/ ainda nao esteja presente localmente",
     )
+    parser.add_argument(
+        "--cliente",
+        choices=["client1", "client2"],
+        default=None,
+        help="Executa somente o cliente selecionado; por padrao executa ambos."
+    )
     args = parser.parse_args()
 
     recuperador = RecuperadorRAG()
@@ -199,7 +205,9 @@ def main():
         print(f"\n{'=' * 68}")
         print(f"SESSAO AGENTE LLM — {identificador.upper()} (Politica: {args.politica})")
         print("=" * 68)
-        for nome in ("client1", "client2"):
+
+        clientes = [args.cliente] if args.cliente else ["client1", "client2"]
+        for nome in clientes:
             print(f"[*] Analisando {nome} com {args.provedor} ({agente.config.modelo_llm})...", flush=True)
             _, auditoria = agente.diagnosticar(
                 dispositivo=nome,

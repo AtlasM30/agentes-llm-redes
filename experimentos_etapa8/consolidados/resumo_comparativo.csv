@@ -1,0 +1,3 @@
+politica,total,acertos,erros,acuracia_percentual,tempo_medio_s,tokens_medios,testes_bloqueados
+padrao,36,36,0,100.0,18.3279,19072.25,3
+restritiva,36,36,0,100.0,33.931,19467.25,9

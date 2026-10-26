@@ -1,0 +1,170 @@
+{
+  "total_diagnosticos": 72,
+  "metodologia": "Bateria original mais recuperacoes; falhas operacionais originais preservadas.",
+  "politicas": {
+    "padrao": {
+      "total": 36,
+      "acertos": 36,
+      "erros": 0,
+      "acuracia_percentual": 100.0,
+      "origem_registros": {
+        "original": 24,
+        "recuperacao": 12
+      },
+      "tempo_s": {
+        "n": 36,
+        "media": 18.3279,
+        "mediana": 17.5158,
+        "desvio_padrao": 8.1458
+      },
+      "tokens_total": {
+        "n": 36,
+        "media": 19072.25,
+        "mediana": 21401.5,
+        "desvio_padrao": 5784.288
+      },
+      "testes_propostos_total": 156,
+      "testes_autorizados_total": 153,
+      "testes_bloqueados_total": 3,
+      "aderencia_rag": {
+        "n": 36,
+        "media": 1.0,
+        "mediana": 1.0,
+        "desvio_padrao": 0.0
+      },
+      "acuracia_por_repeticao": {
+        "1": 100.0,
+        "2": 100.0,
+        "3": 100.0
+      },
+      "acuracia_por_caso": {
+        "caso_00": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_01": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_02": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_03": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_04": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_05": {
+          "total": 6,
+          "acertos": 6
+        }
+      },
+      "matriz_confusao": {
+        "sem_anomalia_detectada": {
+          "sem_anomalia_detectada": 18
+        },
+        "problema_dns": {
+          "problema_dns": 3
+        },
+        "falha_de_roteamento": {
+          "falha_de_roteamento": 3
+        },
+        "falha_de_interface": {
+          "falha_de_interface": 3
+        },
+        "bloqueio_acl": {
+          "bloqueio_acl": 3
+        },
+        "possivel_congestionamento": {
+          "possivel_congestionamento": 6
+        }
+      }
+    },
+    "restritiva": {
+      "total": 36,
+      "acertos": 36,
+      "erros": 0,
+      "acuracia_percentual": 100.0,
+      "origem_registros": {
+        "original": 16,
+        "recuperacao": 20
+      },
+      "tempo_s": {
+        "n": 36,
+        "media": 33.931,
+        "mediana": 25.7706,
+        "desvio_padrao": 28.8674
+      },
+      "tokens_total": {
+        "n": 36,
+        "media": 19467.25,
+        "mediana": 21401.5,
+        "desvio_padrao": 6414.3862
+      },
+      "testes_propostos_total": 159,
+      "testes_autorizados_total": 150,
+      "testes_bloqueados_total": 9,
+      "aderencia_rag": {
+        "n": 36,
+        "media": 1.0,
+        "mediana": 1.0,
+        "desvio_padrao": 0.0
+      },
+      "acuracia_por_repeticao": {
+        "1": 100.0,
+        "2": 100.0,
+        "3": 100.0
+      },
+      "acuracia_por_caso": {
+        "caso_00": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_01": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_02": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_03": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_04": {
+          "total": 6,
+          "acertos": 6
+        },
+        "caso_05": {
+          "total": 6,
+          "acertos": 6
+        }
+      },
+      "matriz_confusao": {
+        "sem_anomalia_detectada": {
+          "sem_anomalia_detectada": 18
+        },
+        "problema_dns": {
+          "problema_dns": 3
+        },
+        "falha_de_roteamento": {
+          "falha_de_roteamento": 3
+        },
+        "falha_de_interface": {
+          "falha_de_interface": 3
+        },
+        "bloqueio_acl": {
+          "bloqueio_acl": 3
+        },
+        "possivel_congestionamento": {
+          "possivel_congestionamento": 6
+        }
+      }
+    }
+  }
+}
