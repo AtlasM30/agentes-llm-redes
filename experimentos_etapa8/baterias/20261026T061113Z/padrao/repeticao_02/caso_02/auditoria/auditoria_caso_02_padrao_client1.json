@@ -1,0 +1,292 @@
+{
+  "execucao_id": "caso_02_padrao",
+  "dispositivo_alvo": "client1",
+  "iniciado_em_utc": "2026-10-26T06:13:45.656797+00:00",
+  "finalizado_em_utc": "2026-10-26T06:13:57.111707+00:00",
+  "hiperparametros": {
+    "provedor_llm": "gemini",
+    "modelo_llm": "gemini-3.1-flash-lite",
+    "eh_llm_real": true,
+    "temperatura": 0.0,
+    "max_tokens_resposta": 4096,
+    "max_iteracoes": 8,
+    "top_k_rag": 4,
+    "score_minimo_rag": 0.05,
+    "politica_seguranca": "padrao",
+    "modo_evidencias": "progressivo",
+    "versao_indice_rag": "f3f9b041b48fe799",
+    "versao_python": "3.12.3"
+  },
+  "metricas_sessao": {
+    "modo_inferencia": "inferencia_llm_real",
+    "origem_contagem_tokens": "telemetria_oficial_api",
+    "total_iteracoes": 4,
+    "chamadas_llm": 4,
+    "erros_formato_recuperados": 0,
+    "tentativas_duplicadas_evitadas": 0,
+    "testes_propostos": 3,
+    "testes_autorizados_executados": 2,
+    "testes_bloqueados": 1,
+    "houve_bloqueio": true,
+    "adaptou_apos_bloqueio": true,
+    "concluiu_apos_bloqueio": true,
+    "consultas_rag_realizadas": 1,
+    "taxa_aderencia_citacoes_rag": 1.0,
+    "tokens_prompt": 11213,
+    "tokens_completion": 1150,
+    "tokens_total": 12363,
+    "tempo_diagnostico_s": 11.455
+  },
+  "avaliacao_fundamentacao_rag": {
+    "citacoes_informadas": [
+      "iproute2_man#04",
+      "iproute2_man#05",
+      "mininet_walkthrough#03"
+    ],
+    "citacoes_presentes_no_contexto": [
+      "iproute2_man#04",
+      "iproute2_man#05",
+      "mininet_walkthrough#03"
+    ],
+    "citacoes_inexistentes_filtradas": [],
+    "citacoes_aderentes_ao_dominio": [
+      "iproute2_man#04",
+      "iproute2_man#05",
+      "mininet_walkthrough#03"
+    ],
+    "citacoes_fora_de_dominio": [],
+    "taxa_aderencia_tematica": 1.0
+  },
+  "consultas_rag": [
+    {
+      "iteracao": 0,
+      "consulta": "diagnostico rede mininet topologia sub-redes precedencia interface ip -br link ip route show",
+      "quantidade_recuperada": 4,
+      "trechos": [
+        {
+          "chunk_id": "mininet_walkthrough#02",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 13.3751
+        },
+        {
+          "chunk_id": "mininet_walkthrough#05",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 12.3274
+        },
+        {
+          "chunk_id": "mininet_walkthrough#03",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 11.933
+        },
+        {
+          "chunk_id": "iproute2_man#04",
+          "fonte_id": "iproute2_man",
+          "titulo": "Manual Linux iproute2 — ip-link(8), ip-address(8) e ip-route(8)",
+          "tema": "roteamento_e_interfaces",
+          "score": 11.8623
+        }
+      ]
+    }
+  ],
+  "passos_investigacao": [
+    {
+      "iteracao": 1,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "Para diagnosticar a conectividade entre o client1 e o servidor, devo seguir a precedência causal estabelecida: primeiro verificar o estado da interface de rede do client1 para garantir que ela esteja UP, conforme orientado pela documentação técnica.",
+      "hipoteses_em_aberto": [
+        "falha_de_interface",
+        "falha_de_roteamento",
+        "bloqueio_acl",
+        "problema_dns"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros": {
+          "subcomando": "estado"
+        },
+        "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Consulta somente leitura de interfaces (estado) autorizada em client1.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "subcomando": "estado"
+        },
+        "comando_canonico": [
+          "ip",
+          "-br",
+          "link"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:13:51.329505+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_interfaces",
+          "dispositivo": "client1",
+          "parametros": {
+            "subcomando": "estado"
+          },
+          "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_interfaces",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2408,
+        "completion_tokens": 236,
+        "total_tokens": 2644
+      },
+      "latencia_llm_ms": 5669.92
+    },
+    {
+      "iteracao": 2,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A interface client1-eth0 está UP. Conforme a precedência causal, o próximo passo lógico é verificar a tabela de rotas do client1 para garantir que o tráfego destinado à rede 192.168.20.0/24 ou o gateway padrão (192.168.10.1) esteja configurado corretamente.",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento",
+        "problema_dns",
+        "bloqueio_acl"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_rotas",
+        "dispositivo": "client1",
+        "parametros": {},
+        "justificativa": "Verificar a existência de rotas para o gateway ou para a sub-rede do servidor, conforme pre-requisito de camada 3 estabelecido na documentação."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Leitura da tabela de roteamento autorizada em client1.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "consultar_rotas",
+        "dispositivo": "client1",
+        "parametros_normalizados": {},
+        "comando_canonico": [
+          "ip",
+          "route",
+          "show"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:13:53.755742+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_rotas",
+          "dispositivo": "client1",
+          "parametros": {},
+          "justificativa": "Verificar a existência de rotas para o gateway ou para a sub-rede do servidor, conforme pre-requisito de camada 3 estabelecido na documentação."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_rotas",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2814,
+        "completion_tokens": 247,
+        "total_tokens": 3061
+      },
+      "latencia_llm_ms": 2422.96
+    },
+    {
+      "iteracao": 3,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A interface client1-eth0 está UP, mas a tabela de rotas do client1 não contém uma rota default nem uma rota específica para a rede 192.168.20.0/24. Conforme a documentação (iproute2_man#05), a presença da interface UP combinada com a ausência de rota para o destino caracteriza uma falha de roteamento.",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento"
+      ],
+      "solicitacao_teste": null,
+      "decisao_validador": {
+        "autorizado": false,
+        "codigo_motivo": "SINTAXE_INVALIDA",
+        "motivo": "Campo 'operacao' ausente ou invalido.",
+        "aspecto_verificado": "sintaxe",
+        "politica": "padrao",
+        "operacao": "desconhecida",
+        "dispositivo": "indefinido",
+        "parametros_normalizados": {},
+        "comando_canonico": null,
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:13:55.086514+00:00",
+        "solicitacao_original": {}
+      },
+      "resumo_execucao": null,
+      "uso_tokens": {
+        "prompt_tokens": 2960,
+        "completion_tokens": 269,
+        "total_tokens": 3229
+      },
+      "latencia_llm_ms": 1328.32
+    },
+    {
+      "iteracao": 4,
+      "acao_modelo": "concluir_diagnostico",
+      "raciocinio": "A interface client1-eth0 está em estado UP, confirmando a integridade da camada física/enlace. No entanto, a tabela de rotas do client1 contém apenas a rota para a sub-rede local (192.168.10.0/24) e carece de uma rota default ou específica ",
+      "hipoteses_em_aberto": null,
+      "solicitacao_teste": null,
+      "decisao_validador": null,
+      "resumo_execucao": null,
+      "uso_tokens": {
+        "prompt_tokens": 3031,
+        "completion_tokens": 398,
+        "total_tokens": 3429
+      },
+      "latencia_llm_ms": 2022.32
+    }
+  ],
+  "resultado_final": {
+    "hipotese": "falha_de_roteamento",
+    "confianca": "alta",
+    "evidencias": [
+      "client1-eth0 está UP",
+      "Tabela de rotas do client1 não possui rota para 192.168.20.0/24 ou rota default"
+    ],
+    "diagnostico_fundamentado": "A interface client1-eth0 está em estado UP, confirmando a integridade da camada física/enlace. No entanto, a tabela de rotas do client1 contém apenas a rota para a sub-rede local (192.168.10.0/24) e carece de uma rota default ou específica para a rede de destino (192.168.20.0/24), impedindo o tráfego para o servidor 192.168.20.10 através do roteador 192.168.10.1.",
+    "hipoteses_descartadas": [
+      "falha_de_interface"
+    ],
+    "fontes_rag_citadas": [
+      "iproute2_man#04",
+      "iproute2_man#05",
+      "mininet_walkthrough#03"
+    ],
+    "avaliacao_fundamentacao_rag": {
+      "citacoes_informadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "mininet_walkthrough#03"
+      ],
+      "citacoes_presentes_no_contexto": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "mininet_walkthrough#03"
+      ],
+      "citacoes_inexistentes_filtradas": [],
+      "citacoes_aderentes_ao_dominio": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "mininet_walkthrough#03"
+      ],
+      "citacoes_fora_de_dominio": [],
+      "taxa_aderencia_tematica": 1.0
+    },
+    "recomendacoes_correcao": [
+      "Adicionar a rota padrão no client1: 'ip route add default via 192.168.10.1'"
+    ],
+    "limitacoes_investigacao": "Nenhuma, a ausência de rota foi confirmada via consulta de rotas."
+  }
+}

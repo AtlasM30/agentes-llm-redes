@@ -1,0 +1,16 @@
+Piloto 01 - Gemini real
+Politica: padrao
+Cenario: caso_00
+
+client1:
+  Status: concluido
+  Hipotese: sem_anomalia_detectada
+  Tokens reportados: 21396
+  Tempo reportado: 78.261 segundos
+
+client2:
+  Status: falha de infraestrutura
+  Erro: TimeoutError durante leitura da API Gemini
+
+Resultado geral: execucao parcial
+Observacao: nao houve registro completo do terminal pelo tee.

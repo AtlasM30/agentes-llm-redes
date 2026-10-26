@@ -1,0 +1,1 @@
+d9f20d3b978c183fb428d405899c99d2ddbdda7124c83fb58ab59bec60014ae3  rag/indice_rag.json

@@ -1,0 +1,14 @@
+{
+  "politica": "padrao",
+  "repeticao": 1,
+  "caso": 2,
+  "inicio_utc": "2026-10-26T06:11:51.566401+00:00",
+  "fim_utc": "2026-10-26T06:12:00.314856+00:00",
+  "duracao_total_s": 8.748455,
+  "codigo_saida": 1,
+  "erro_orquestrador": null,
+  "auditorias": [],
+  "quantidade_auditorias": 0,
+  "completo": false,
+  "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_01/caso_02"
+}

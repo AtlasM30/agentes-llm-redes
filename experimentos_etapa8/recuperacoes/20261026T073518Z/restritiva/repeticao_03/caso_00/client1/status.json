@@ -1,0 +1,17 @@
+{
+  "politica": "restritiva",
+  "repeticao": 3,
+  "caso": 0,
+  "cliente": "client1",
+  "inicio_utc": "2026-10-26T07:37:28.209661+00:00",
+  "fim_utc": "2026-10-26T07:37:42.925963+00:00",
+  "codigo_saida": 0,
+  "concluido": true,
+  "erro": null,
+  "auditorias": [
+    "auditoria_caso_00_restritiva_client1.json"
+  ],
+  "erro_429": false,
+  "erro_503": false,
+  "conexao_recusada": false
+}

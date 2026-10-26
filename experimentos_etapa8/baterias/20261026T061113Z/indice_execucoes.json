@@ -1,0 +1,567 @@
+[
+  {
+    "politica": "padrao",
+    "repeticao": 1,
+    "caso": 0,
+    "inicio_utc": "2026-10-26T06:11:13.040204+00:00",
+    "fim_utc": "2026-10-26T06:11:36.894271+00:00",
+    "duracao_total_s": 23.854067,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_00_padrao_client1.json",
+      "auditoria_caso_00_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_01/caso_00"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 1,
+    "caso": 1,
+    "inicio_utc": "2026-10-26T06:11:36.901901+00:00",
+    "fim_utc": "2026-10-26T06:11:51.557189+00:00",
+    "duracao_total_s": 14.655288,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_01/caso_01"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 1,
+    "caso": 2,
+    "inicio_utc": "2026-10-26T06:11:51.566401+00:00",
+    "fim_utc": "2026-10-26T06:12:00.314856+00:00",
+    "duracao_total_s": 8.748455,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_01/caso_02"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 1,
+    "caso": 3,
+    "inicio_utc": "2026-10-26T06:12:00.319900+00:00",
+    "fim_utc": "2026-10-26T06:12:06.700022+00:00",
+    "duracao_total_s": 6.380122,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_01/caso_03"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 1,
+    "caso": 4,
+    "inicio_utc": "2026-10-26T06:12:06.711465+00:00",
+    "fim_utc": "2026-10-26T06:12:40.722967+00:00",
+    "duracao_total_s": 34.011502,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_04_padrao_client1.json",
+      "auditoria_caso_04_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_01/caso_04"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 1,
+    "caso": 5,
+    "inicio_utc": "2026-10-26T06:12:40.744497+00:00",
+    "fim_utc": "2026-10-26T06:12:58.807483+00:00",
+    "duracao_total_s": 18.062986,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_05_padrao_client1.json"
+    ],
+    "quantidade_auditorias": 1,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_01/caso_05"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 2,
+    "caso": 0,
+    "inicio_utc": "2026-10-26T06:12:58.824717+00:00",
+    "fim_utc": "2026-10-26T06:13:09.404493+00:00",
+    "duracao_total_s": 10.579776,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_02/caso_00"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 2,
+    "caso": 1,
+    "inicio_utc": "2026-10-26T06:13:09.413045+00:00",
+    "fim_utc": "2026-10-26T06:13:45.541351+00:00",
+    "duracao_total_s": 36.128306,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_01_padrao_client1.json",
+      "auditoria_caso_01_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_02/caso_01"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 2,
+    "caso": 2,
+    "inicio_utc": "2026-10-26T06:13:45.547724+00:00",
+    "fim_utc": "2026-10-26T06:14:03.236213+00:00",
+    "duracao_total_s": 17.688489,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_02_padrao_client1.json"
+    ],
+    "quantidade_auditorias": 1,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_02/caso_02"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 2,
+    "caso": 3,
+    "inicio_utc": "2026-10-26T06:14:03.247649+00:00",
+    "fim_utc": "2026-10-26T06:14:12.009910+00:00",
+    "duracao_total_s": 8.762261,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_02/caso_03"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 2,
+    "caso": 4,
+    "inicio_utc": "2026-10-26T06:14:12.025446+00:00",
+    "fim_utc": "2026-10-26T06:15:06.666137+00:00",
+    "duracao_total_s": 54.640691,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_04_padrao_client1.json",
+      "auditoria_caso_04_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_02/caso_04"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 2,
+    "caso": 5,
+    "inicio_utc": "2026-10-26T06:15:06.673009+00:00",
+    "fim_utc": "2026-10-26T06:15:40.064431+00:00",
+    "duracao_total_s": 33.391422,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_05_padrao_client1.json",
+      "auditoria_caso_05_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_02/caso_05"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 3,
+    "caso": 0,
+    "inicio_utc": "2026-10-26T06:15:40.071248+00:00",
+    "fim_utc": "2026-10-26T06:16:31.269738+00:00",
+    "duracao_total_s": 51.19849,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_00_padrao_client1.json",
+      "auditoria_caso_00_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_03/caso_00"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 3,
+    "caso": 1,
+    "inicio_utc": "2026-10-26T06:16:31.277744+00:00",
+    "fim_utc": "2026-10-26T06:17:22.501580+00:00",
+    "duracao_total_s": 51.223836,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_01_padrao_client1.json",
+      "auditoria_caso_01_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_03/caso_01"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 3,
+    "caso": 2,
+    "inicio_utc": "2026-10-26T06:17:22.506758+00:00",
+    "fim_utc": "2026-10-26T06:17:53.415548+00:00",
+    "duracao_total_s": 30.90879,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_02_padrao_client1.json",
+      "auditoria_caso_02_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_03/caso_02"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 3,
+    "caso": 3,
+    "inicio_utc": "2026-10-26T06:17:53.422802+00:00",
+    "fim_utc": "2026-10-26T06:18:31.339348+00:00",
+    "duracao_total_s": 37.916546,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_03_padrao_client1.json",
+      "auditoria_caso_03_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_03/caso_03"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 3,
+    "caso": 4,
+    "inicio_utc": "2026-10-26T06:18:31.347652+00:00",
+    "fim_utc": "2026-10-26T06:19:33.672682+00:00",
+    "duracao_total_s": 62.32503,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_04_padrao_client1.json",
+      "auditoria_caso_04_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_03/caso_04"
+  },
+  {
+    "politica": "padrao",
+    "repeticao": 3,
+    "caso": 5,
+    "inicio_utc": "2026-10-26T06:19:33.681748+00:00",
+    "fim_utc": "2026-10-26T06:20:04.787597+00:00",
+    "duracao_total_s": 31.105849,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_05_padrao_client1.json",
+      "auditoria_caso_05_padrao_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_03/caso_05"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 1,
+    "caso": 0,
+    "inicio_utc": "2026-10-26T06:20:04.797815+00:00",
+    "fim_utc": "2026-10-26T06:21:10.125197+00:00",
+    "duracao_total_s": 65.327382,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_00_restritiva_client1.json",
+      "auditoria_caso_00_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_01/caso_00"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 1,
+    "caso": 1,
+    "inicio_utc": "2026-10-26T06:21:10.131566+00:00",
+    "fim_utc": "2026-10-26T06:23:07.746133+00:00",
+    "duracao_total_s": 117.614567,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_01_restritiva_client1.json",
+      "auditoria_caso_01_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_01/caso_01"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 1,
+    "caso": 2,
+    "inicio_utc": "2026-10-26T06:23:07.769331+00:00",
+    "fim_utc": "2026-10-26T06:24:10.286757+00:00",
+    "duracao_total_s": 62.517426,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_02_restritiva_client1.json",
+      "auditoria_caso_02_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_01/caso_02"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 1,
+    "caso": 3,
+    "inicio_utc": "2026-10-26T06:24:10.297480+00:00",
+    "fim_utc": "2026-10-26T06:24:38.377890+00:00",
+    "duracao_total_s": 28.08041,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_03_restritiva_client1.json",
+      "auditoria_caso_03_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_01/caso_03"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 1,
+    "caso": 4,
+    "inicio_utc": "2026-10-26T06:24:38.384931+00:00",
+    "fim_utc": "2026-10-26T06:26:28.796359+00:00",
+    "duracao_total_s": 110.411428,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_04_restritiva_client1.json",
+      "auditoria_caso_04_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_01/caso_04"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 1,
+    "caso": 5,
+    "inicio_utc": "2026-10-26T06:26:28.806346+00:00",
+    "fim_utc": "2026-10-26T06:27:44.702340+00:00",
+    "duracao_total_s": 75.895994,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_05_restritiva_client1.json",
+      "auditoria_caso_05_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_01/caso_05"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 2,
+    "caso": 0,
+    "inicio_utc": "2026-10-26T06:27:44.716256+00:00",
+    "fim_utc": "2026-10-26T06:29:58.435030+00:00",
+    "duracao_total_s": 133.718774,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_00_restritiva_client1.json",
+      "auditoria_caso_00_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_02/caso_00"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 2,
+    "caso": 1,
+    "inicio_utc": "2026-10-26T06:29:58.447347+00:00",
+    "fim_utc": "2026-10-26T06:33:51.573832+00:00",
+    "duracao_total_s": 233.126485,
+    "codigo_saida": 0,
+    "erro_orquestrador": null,
+    "auditorias": [
+      "auditoria_caso_01_restritiva_client1.json",
+      "auditoria_caso_01_restritiva_client2.json"
+    ],
+    "quantidade_auditorias": 2,
+    "completo": true,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_02/caso_01"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 2,
+    "caso": 2,
+    "inicio_utc": "2026-10-26T06:33:51.583435+00:00",
+    "fim_utc": "2026-10-26T06:34:01.314382+00:00",
+    "duracao_total_s": 9.730947,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_02/caso_02"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 2,
+    "caso": 3,
+    "inicio_utc": "2026-10-26T06:34:01.322453+00:00",
+    "fim_utc": "2026-10-26T06:34:53.348617+00:00",
+    "duracao_total_s": 52.026164,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_02/caso_03"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 2,
+    "caso": 4,
+    "inicio_utc": "2026-10-26T06:34:53.364096+00:00",
+    "fim_utc": "2026-10-26T06:34:53.837954+00:00",
+    "duracao_total_s": 0.473858,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_02/caso_04"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 2,
+    "caso": 5,
+    "inicio_utc": "2026-10-26T06:34:53.846960+00:00",
+    "fim_utc": "2026-10-26T06:34:54.205647+00:00",
+    "duracao_total_s": 0.358687,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_02/caso_05"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 3,
+    "caso": 0,
+    "inicio_utc": "2026-10-26T06:34:54.211959+00:00",
+    "fim_utc": "2026-10-26T06:34:54.620576+00:00",
+    "duracao_total_s": 0.408617,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_03/caso_00"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 3,
+    "caso": 1,
+    "inicio_utc": "2026-10-26T06:34:54.625999+00:00",
+    "fim_utc": "2026-10-26T06:34:55.056745+00:00",
+    "duracao_total_s": 0.430746,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_03/caso_01"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 3,
+    "caso": 2,
+    "inicio_utc": "2026-10-26T06:34:55.067748+00:00",
+    "fim_utc": "2026-10-26T06:34:55.607302+00:00",
+    "duracao_total_s": 0.539554,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_03/caso_02"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 3,
+    "caso": 3,
+    "inicio_utc": "2026-10-26T06:34:55.613504+00:00",
+    "fim_utc": "2026-10-26T06:34:57.244148+00:00",
+    "duracao_total_s": 1.630644,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_03/caso_03"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 3,
+    "caso": 4,
+    "inicio_utc": "2026-10-26T06:34:57.248665+00:00",
+    "fim_utc": "2026-10-26T06:34:57.594356+00:00",
+    "duracao_total_s": 0.345691,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_03/caso_04"
+  },
+  {
+    "politica": "restritiva",
+    "repeticao": 3,
+    "caso": 5,
+    "inicio_utc": "2026-10-26T06:34:57.602225+00:00",
+    "fim_utc": "2026-10-26T06:34:57.967510+00:00",
+    "duracao_total_s": 0.365285,
+    "codigo_saida": 1,
+    "erro_orquestrador": null,
+    "auditorias": [],
+    "quantidade_auditorias": 0,
+    "completo": false,
+    "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_03/caso_05"
+  }
+]

@@ -1,0 +1,187 @@
+{
+    "timestamp": "2026-10-25T04:33:16.413008+00:00",
+    "cenario": "caso_04",
+    "servidor": "192.168.20.10",
+    "dominio": "app.lab.local",
+    "dispositivos": {
+        "client1": {
+            "interfaces": {
+                "enderecos": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nclient1-eth0@if48 UP             192.168.10.2/24 fe80::200:ff:fe00:1/64 \n"
+                },
+                "estado": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> \nclient1-eth0@if48 UP             00:00:00:00:00:01 <BROADCAST,MULTICAST,UP,LOWER_UP> \n"
+                },
+                "estatisticas": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\n    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00\n    RX:  bytes packets errors dropped  missed   mcast           \n             0       0      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n             0       0      0       0       0       0 \n2: client1-eth0@if48: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000\n    link/ether 00:00:00:00:00:01 brd ff:ff:ff:ff:ff:ff link-netnsid 0\n    RX:  bytes packets errors dropped  missed   mcast           \n          5292      42      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n          2748      32      0       0       0       0 \n"
+                }
+            },
+            "rotas": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "default via 192.168.10.1 dev client1-eth0 \n192.168.10.0/24 dev client1-eth0 proto kernel scope link src 192.168.10.2 \n"
+            },
+            "acl": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "-P INPUT ACCEPT\n-P FORWARD ACCEPT\n-P OUTPUT ACCEPT\n"
+            },
+            "ping": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "PING 192.168.20.10 (192.168.20.10) 56(84) bytes of data.\n64 bytes from 192.168.20.10: icmp_seq=1 ttl=63 time=21.9 ms\n64 bytes from 192.168.20.10: icmp_seq=2 ttl=63 time=21.5 ms\n64 bytes from 192.168.20.10: icmp_seq=3 ttl=63 time=20.7 ms\n\n--- 192.168.20.10 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2005ms\nrtt min/avg/max/mdev = 20.744/21.385/21.912/0.483 ms\n",
+                "destino": "192.168.20.10",
+                "pacotes_enviados": 3,
+                "perda_percentual": 0.0,
+                "latencia_media_ms": 21.385
+            },
+            "dns": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "192.168.20.10\n",
+                "dominio": "app.lab.local",
+                "dns_configurado_no_perfil": "192.168.20.10",
+                "enderecos_resolvidos": [
+                    "192.168.20.10"
+                ],
+                "resolucao_correta": true,
+                "observacao": "DNS do perfil experimental; nao altera resolv.conf"
+            },
+            "http": {
+                "sucesso": false,
+                "codigo_retorno": 28,
+                "saida": "curl: (28) Failed to connect to 192.168.20.10 port 80 after 3002 ms: Timeout was reached\n000",
+                "url": "http://192.168.20.10/",
+                "codigo_http": null,
+                "servico_disponivel": false
+            },
+            "perfil_dns": "192.168.20.10"
+        },
+        "client2": {
+            "interfaces": {
+                "enderecos": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nclient2-eth0@if49 UP             192.168.10.3/24 fe80::200:ff:fe00:2/64 \n"
+                },
+                "estado": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> \nclient2-eth0@if49 UP             00:00:00:00:00:02 <BROADCAST,MULTICAST,UP,LOWER_UP> \n"
+                },
+                "estatisticas": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\n    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00\n    RX:  bytes packets errors dropped  missed   mcast           \n             0       0      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n             0       0      0       0       0       0 \n2: client2-eth0@if49: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000\n    link/ether 00:00:00:00:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0\n    RX:  bytes packets errors dropped  missed   mcast           \n          9284      68      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n          4398      51      0       0       0       0 \n"
+                }
+            },
+            "rotas": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "default via 192.168.10.1 dev client2-eth0 \n192.168.10.0/24 dev client2-eth0 proto kernel scope link src 192.168.10.3 \n"
+            },
+            "acl": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "-P INPUT ACCEPT\n-P FORWARD ACCEPT\n-P OUTPUT ACCEPT\n"
+            },
+            "ping": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "PING 192.168.20.10 (192.168.20.10) 56(84) bytes of data.\n64 bytes from 192.168.20.10: icmp_seq=1 ttl=63 time=20.6 ms\n64 bytes from 192.168.20.10: icmp_seq=2 ttl=63 time=20.7 ms\n64 bytes from 192.168.20.10: icmp_seq=3 ttl=63 time=20.8 ms\n\n--- 192.168.20.10 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2004ms\nrtt min/avg/max/mdev = 20.614/20.701/20.796/0.074 ms\n",
+                "destino": "192.168.20.10",
+                "pacotes_enviados": 3,
+                "perda_percentual": 0.0,
+                "latencia_media_ms": 20.701
+            },
+            "dns": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "192.168.20.10\n",
+                "dominio": "app.lab.local",
+                "dns_configurado_no_perfil": "192.168.20.10",
+                "enderecos_resolvidos": [
+                    "192.168.20.10"
+                ],
+                "resolucao_correta": true,
+                "observacao": "DNS do perfil experimental; nao altera resolv.conf"
+            },
+            "http": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "200",
+                "url": "http://192.168.20.10/",
+                "codigo_http": 200,
+                "servico_disponivel": true
+            },
+            "perfil_dns": "192.168.20.10"
+        },
+        "router1": {
+            "interfaces": {
+                "enderecos": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nrouter1-eth0@if50 UP             192.168.10.1/24 fe80::200:ff:fe00:3/64 \nrouter1-eth1@if2 UP             192.168.20.1/24 fe80::40e0:e9ff:fe24:f30f/64 \n"
+                },
+                "estado": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> \nrouter1-eth0@if50 UP             00:00:00:00:00:03 <BROADCAST,MULTICAST,UP,LOWER_UP> \nrouter1-eth1@if2 UP             42:e0:e9:24:f3:0f <BROADCAST,MULTICAST,UP,LOWER_UP> \n"
+                },
+                "estatisticas": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\n    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00\n    RX:  bytes packets errors dropped  missed   mcast           \n             0       0      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n             0       0      0       0       0       0 \n2: router1-eth0@if50: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000\n    link/ether 00:00:00:00:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0\n    RX:  bytes packets errors dropped  missed   mcast           \n          9336     110      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n         13308      81      0       0       0       0 \n3: router1-eth1@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000\n    link/ether 42:e0:e9:24:f3:0f brd ff:ff:ff:ff:ff:ff link-netnsid 1\n    RX:  bytes packets errors dropped  missed   mcast           \n         12924      76      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n          7520      89      0       0       0       0 \n"
+                }
+            },
+            "rotas": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "192.168.10.0/24 dev router1-eth0 proto kernel scope link src 192.168.10.1 \n192.168.20.0/24 dev router1-eth1 proto kernel scope link src 192.168.20.1 \n"
+            },
+            "acl": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "-P INPUT ACCEPT\n-P FORWARD ACCEPT\n-P OUTPUT ACCEPT\n"
+            }
+        },
+        "server": {
+            "interfaces": {
+                "enderecos": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nserver-eth0@if3  UP             192.168.20.10/24 fe80::200:ff:fe00:4/64 \n"
+                },
+                "estado": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> \nserver-eth0@if3  UP             00:00:00:00:00:04 <BROADCAST,MULTICAST,UP,LOWER_UP> \n"
+                },
+                "estatisticas": {
+                    "sucesso": true,
+                    "codigo_retorno": 0,
+                    "saida": "1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\n    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00\n    RX:  bytes packets errors dropped  missed   mcast           \n           388       4      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n           388       4      0       0       0       0 \n2: server-eth0@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000\n    link/ether 00:00:00:00:00:04 brd ff:ff:ff:ff:ff:ff link-netnsid 0\n    RX:  bytes packets errors dropped  missed   mcast           \n          7520      89      0       0       0       0 \n    TX:  bytes packets errors dropped carrier collsns           \n         12924      76      0       0       0       0 \n"
+                }
+            },
+            "rotas": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "default via 192.168.20.1 dev server-eth0 \n192.168.20.0/24 dev server-eth0 proto kernel scope link src 192.168.20.10 \n"
+            },
+            "acl": {
+                "sucesso": true,
+                "codigo_retorno": 0,
+                "saida": "-P INPUT ACCEPT\n-P FORWARD ACCEPT\n-P OUTPUT ACCEPT\n-A INPUT -s 192.168.10.2/32 -d 192.168.20.10/32 -p tcp -m tcp --dport 80 -j DROP\n"
+            }
+        }
+    },
+    "tipo_dns": "perfil de cliente experimental",
+    "enlace_servidor_mbps": 10,
+    "execucao": "2026-10-25T04:33:23.861587+00:00"
+}

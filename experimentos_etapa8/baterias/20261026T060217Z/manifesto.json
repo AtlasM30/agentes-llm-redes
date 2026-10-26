@@ -1,0 +1,16 @@
+{
+  "identificador": "20261026T060217Z",
+  "modelo": "gemini-3.1-flash-lite",
+  "provedor": "gemini",
+  "temperatura": 0.0,
+  "rag_top_k": 4,
+  "repeticoes": 1,
+  "politicas": [
+    "padrao"
+  ],
+  "modo_evidencias": "progressivo",
+  "git_commit": "7f5112a62900dfe8bb823690a39c829ae1f162db",
+  "entradas": {
+    "evidencias_caso_00.json": "7cd61d038105f7c9fb7efb90158961fadd437d8246db2ab382922dfdd2b9cd39"
+  }
+}

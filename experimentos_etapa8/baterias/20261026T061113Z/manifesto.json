@@ -1,0 +1,22 @@
+{
+  "identificador": "20261026T061113Z",
+  "modelo": "gemini-3.1-flash-lite",
+  "provedor": "gemini",
+  "temperatura": 0.0,
+  "rag_top_k": 4,
+  "repeticoes": 3,
+  "politicas": [
+    "padrao",
+    "restritiva"
+  ],
+  "modo_evidencias": "progressivo",
+  "git_commit": "282d669a83c8da7d6e4769f365077b552919ddbc",
+  "entradas": {
+    "evidencias_caso_00.json": "7cd61d038105f7c9fb7efb90158961fadd437d8246db2ab382922dfdd2b9cd39",
+    "evidencias_caso_01.json": "a0c8581db4293da6f5e565f00ded6567279b9ff501712f1a6b2de1e47a94ea73",
+    "evidencias_caso_02.json": "7cb869e323a10234243bc401d7e51aaed0243c6467430ee9373f84e7c68785b8",
+    "evidencias_caso_03.json": "53c52a2889ba72caece585a129e442601a9410fc92cc9865b82495fcbc15d8d2",
+    "evidencias_caso_04.json": "54af129a4ac65dcea46d03f7ad54eb4698d5eb21bc9335e381033c157879035e",
+    "evidencias_caso_05.json": "2f5f5a9aa636f70b3d553305d06b0852339d9fd506685844e6a76c0468b61519"
+  }
+}

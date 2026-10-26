@@ -1,0 +1,412 @@
+{
+  "gerado_em_utc": "2026-10-26T01:10:33.980394+00:00",
+  "hiperparametros": {
+    "provedor_llm": "simulado",
+    "modelo_llm": "simulado-react-rede-v1",
+    "temperatura": 0.0,
+    "max_tokens_resposta": 1200,
+    "max_iteracoes": 8,
+    "top_k_rag": 4,
+    "score_minimo_rag": 0.05,
+    "politica_seguranca": "restritiva",
+    "modo_evidencias": "progressivo",
+    "versao_indice_rag": "f3f9b041b48fe799",
+    "versao_python": "3.12.3"
+  },
+  "total_avaliado": 12,
+  "acertos": 11,
+  "erros_classificacao": 1,
+  "acuracia_diagnostica": 0.9167,
+  "reconhecimento_funcionamento_normal": 1.0,
+  "sessoes_com_bloqueio": 3,
+  "resiliencia_acerto_apos_bloqueio": 0.6667,
+  "media_testes_por_diagnostico": 4.58,
+  "tokens_consumidos_total": 342796,
+  "tempo_total_s": 0.1399,
+  "matriz_confusao": [
+    {
+      "esperado": "bloqueio_acl",
+      "previsto": "problema_http_ou_bloqueio",
+      "quantidade": 1
+    },
+    {
+      "esperado": "falha_de_interface",
+      "previsto": "falha_de_interface",
+      "quantidade": 1
+    },
+    {
+      "esperado": "falha_de_roteamento",
+      "previsto": "falha_de_roteamento",
+      "quantidade": 1
+    },
+    {
+      "esperado": "possivel_congestionamento",
+      "previsto": "possivel_congestionamento",
+      "quantidade": 2
+    },
+    {
+      "esperado": "problema_dns",
+      "previsto": "problema_dns",
+      "quantidade": 1
+    },
+    {
+      "esperado": "sem_anomalia_detectada",
+      "previsto": "sem_anomalia_detectada",
+      "quantidade": 6
+    }
+  ],
+  "resultados": [
+    {
+      "caso": "caso_00",
+      "dispositivo": "client1",
+      "politica": "restritiva",
+      "esperado": "sem_anomalia_detectada",
+      "previsto_agente": "sem_anomalia_detectada",
+      "previsto_baseline_regras": "sem_anomalia_detectada",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "limitada",
+      "testes_propostos": 5,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 28953,
+      "tempo_diagnostico_s": 0.0161,
+      "fontes_rag_citadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "iproute2_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ping, resolucao DNS e servico HTTP funcionando normalmente.",
+        "Nenhuma anomalia de interface, rota, ACL ou latencia identificada pelos testes."
+      ],
+      "recomendacoes_correcao": [
+        "Nenhuma intervencao corretiva necessaria; manter monitoramento regular do ambiente."
+      ]
+    },
+    {
+      "caso": "caso_00",
+      "dispositivo": "client2",
+      "politica": "restritiva",
+      "esperado": "sem_anomalia_detectada",
+      "previsto_agente": "sem_anomalia_detectada",
+      "previsto_baseline_regras": "sem_anomalia_detectada",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "limitada",
+      "testes_propostos": 5,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 28952,
+      "tempo_diagnostico_s": 0.0064,
+      "fontes_rag_citadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "iproute2_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ping, resolucao DNS e servico HTTP funcionando normalmente.",
+        "Nenhuma anomalia de interface, rota, ACL ou latencia identificada pelos testes."
+      ],
+      "recomendacoes_correcao": [
+        "Nenhuma intervencao corretiva necessaria; manter monitoramento regular do ambiente."
+      ]
+    },
+    {
+      "caso": "caso_01",
+      "dispositivo": "client1",
+      "politica": "restritiva",
+      "esperado": "problema_dns",
+      "previsto_agente": "problema_dns",
+      "previsto_baseline_regras": "problema_dns",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "indicativa",
+      "testes_propostos": 5,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 29256,
+      "tempo_diagnostico_s": 0.0172,
+      "fontes_rag_citadas": [
+        "tc_man#02",
+        "dnsmasq_man#04",
+        "bind9_dig#04"
+      ],
+      "evidencias_utilizadas": [
+        "Conectividade IP (ping para 192.168.20.10) funcionando normalmente.",
+        "Teste de resolucao DNS para app.lab.local falhou (servidor DNS consultado no perfil: 192.168.20.99)."
+      ],
+      "recomendacoes_correcao": [
+        "Solicitar ao administrador ajustar o servidor DNS configurado para client1 para apontar para 192.168.20.10 e verificar o servico dnsmasq na porta 53."
+      ]
+    },
+    {
+      "caso": "caso_01",
+      "dispositivo": "client2",
+      "politica": "restritiva",
+      "esperado": "sem_anomalia_detectada",
+      "previsto_agente": "sem_anomalia_detectada",
+      "previsto_baseline_regras": "sem_anomalia_detectada",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "limitada",
+      "testes_propostos": 5,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 28952,
+      "tempo_diagnostico_s": 0.0126,
+      "fontes_rag_citadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "iproute2_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ping, resolucao DNS e servico HTTP funcionando normalmente.",
+        "Nenhuma anomalia de interface, rota, ACL ou latencia identificada pelos testes."
+      ],
+      "recomendacoes_correcao": [
+        "Nenhuma intervencao corretiva necessaria; manter monitoramento regular do ambiente."
+      ]
+    },
+    {
+      "caso": "caso_02",
+      "dispositivo": "client1",
+      "politica": "restritiva",
+      "esperado": "falha_de_roteamento",
+      "previsto_agente": "falha_de_roteamento",
+      "previsto_baseline_regras": "falha_de_roteamento",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "alta",
+      "testes_propostos": 3,
+      "testes_autorizados": 3,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 16794,
+      "tempo_diagnostico_s": 0.0064,
+      "fontes_rag_citadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "iproute2_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ausencia de entrada 'default via' na tabela de rotas de client1.",
+        "Teste de ping para 192.168.20.10 falhou."
+      ],
+      "recomendacoes_correcao": [
+        "Recomendar ao administrador restaurar a rota padrao em client1: 'ip route replace default via 192.168.10.1'."
+      ]
+    },
+    {
+      "caso": "caso_02",
+      "dispositivo": "client2",
+      "politica": "restritiva",
+      "esperado": "sem_anomalia_detectada",
+      "previsto_agente": "sem_anomalia_detectada",
+      "previsto_baseline_regras": "sem_anomalia_detectada",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "limitada",
+      "testes_propostos": 5,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 28952,
+      "tempo_diagnostico_s": 0.0111,
+      "fontes_rag_citadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "iproute2_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ping, resolucao DNS e servico HTTP funcionando normalmente.",
+        "Nenhuma anomalia de interface, rota, ACL ou latencia identificada pelos testes."
+      ],
+      "recomendacoes_correcao": [
+        "Nenhuma intervencao corretiva necessaria; manter monitoramento regular do ambiente."
+      ]
+    },
+    {
+      "caso": "caso_03",
+      "dispositivo": "client1",
+      "politica": "restritiva",
+      "esperado": "falha_de_interface",
+      "previsto_agente": "falha_de_interface",
+      "previsto_baseline_regras": "falha_de_interface",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "alta",
+      "testes_propostos": 1,
+      "testes_autorizados": 1,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 7004,
+      "tempo_diagnostico_s": 0.0042,
+      "fontes_rag_citadas": [
+        "bind9_dig#04",
+        "iproute2_man#04",
+        "iproute2_man#05"
+      ],
+      "evidencias_utilizadas": [
+        "Interface client1-eth0 identificada como DOWN na saida de 'ip -br link'."
+      ],
+      "recomendacoes_correcao": [
+        "Solicitar ao administrador do laboratorio a reativacao da interface ('ip link set client1-eth0 up'), seguida da verificacao do endereco IPv4 (192.168.10.2/24) e da rota padrao ('ip route replace default via 192.168.10.1')."
+      ]
+    },
+    {
+      "caso": "caso_03",
+      "dispositivo": "client2",
+      "politica": "restritiva",
+      "esperado": "sem_anomalia_detectada",
+      "previsto_agente": "sem_anomalia_detectada",
+      "previsto_baseline_regras": "sem_anomalia_detectada",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "limitada",
+      "testes_propostos": 5,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 28952,
+      "tempo_diagnostico_s": 0.0102,
+      "fontes_rag_citadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "iproute2_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ping, resolucao DNS e servico HTTP funcionando normalmente.",
+        "Nenhuma anomalia de interface, rota, ACL ou latencia identificada pelos testes."
+      ],
+      "recomendacoes_correcao": [
+        "Nenhuma intervencao corretiva necessaria; manter monitoramento regular do ambiente."
+      ]
+    },
+    {
+      "caso": "caso_04",
+      "dispositivo": "client1",
+      "politica": "restritiva",
+      "esperado": "bloqueio_acl",
+      "previsto_agente": "problema_http_ou_bloqueio",
+      "previsto_baseline_regras": "bloqueio_acl",
+      "acerto_agente": false,
+      "concordancia_com_baseline": false,
+      "confianca": "indicativa",
+      "testes_propostos": 7,
+      "testes_autorizados": 6,
+      "testes_bloqueados": 1,
+      "houve_bloqueio": true,
+      "tokens_total": 44496,
+      "tempo_diagnostico_s": 0.0154,
+      "fontes_rag_citadas": [
+        "iptables_man#01",
+        "iptables_man#03",
+        "iptables_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ping e DNS funcionando em client1.",
+        "HTTP indisponivel a partir de client1.",
+        "Teste comparativo autorizado: HTTP funcional a partir de client2, indicando servico HTTP ativo e provavel filtragem seletiva."
+      ],
+      "recomendacoes_correcao": [
+        "Solicitar ao administrador verificar diretamente no servidor as regras 'iptables -S' e os logs do processo HTTP na porta 80."
+      ]
+    },
+    {
+      "caso": "caso_04",
+      "dispositivo": "client2",
+      "politica": "restritiva",
+      "esperado": "sem_anomalia_detectada",
+      "previsto_agente": "sem_anomalia_detectada",
+      "previsto_baseline_regras": "sem_anomalia_detectada",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "limitada",
+      "testes_propostos": 5,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 0,
+      "houve_bloqueio": false,
+      "tokens_total": 28952,
+      "tempo_diagnostico_s": 0.011,
+      "fontes_rag_citadas": [
+        "iproute2_man#04",
+        "iproute2_man#05",
+        "iproute2_man#00"
+      ],
+      "evidencias_utilizadas": [
+        "Ping, resolucao DNS e servico HTTP funcionando normalmente.",
+        "Nenhuma anomalia de interface, rota, ACL ou latencia identificada pelos testes."
+      ],
+      "recomendacoes_correcao": [
+        "Nenhuma intervencao corretiva necessaria; manter monitoramento regular do ambiente."
+      ]
+    },
+    {
+      "caso": "caso_05",
+      "dispositivo": "client1",
+      "politica": "restritiva",
+      "esperado": "possivel_congestionamento",
+      "previsto_agente": "possivel_congestionamento",
+      "previsto_baseline_regras": "possivel_congestionamento",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "indicativa",
+      "testes_propostos": 6,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 1,
+      "houve_bloqueio": true,
+      "tokens_total": 35766,
+      "tempo_diagnostico_s": 0.0139,
+      "fontes_rag_citadas": [
+        "tc_man#03",
+        "tc_man#02",
+        "tc_man#04"
+      ],
+      "evidencias_utilizadas": [
+        "Latencia atual: 199.220 ms.",
+        "Latencia de referencia: 33.403 ms (aumento >= 3x e >= 50 ms).",
+        "Ping, DNS e HTTP permanecem funcionais, apontando sobrecarga/fila no enlace compartilhado."
+      ],
+      "recomendacoes_correcao": [
+        "Recomendar ao administrador identificar fluxos concorrentes intensivos no enlace router1-server, avaliar disciplinas de fila ('tc -s qdisc show') e ajustar capacidade ou politicas de QoS."
+      ]
+    },
+    {
+      "caso": "caso_05",
+      "dispositivo": "client2",
+      "politica": "restritiva",
+      "esperado": "possivel_congestionamento",
+      "previsto_agente": "possivel_congestionamento",
+      "previsto_baseline_regras": "possivel_congestionamento",
+      "acerto_agente": true,
+      "concordancia_com_baseline": true,
+      "confianca": "indicativa",
+      "testes_propostos": 6,
+      "testes_autorizados": 5,
+      "testes_bloqueados": 1,
+      "houve_bloqueio": true,
+      "tokens_total": 35767,
+      "tempo_diagnostico_s": 0.0154,
+      "fontes_rag_citadas": [
+        "tc_man#03",
+        "tc_man#02",
+        "tc_man#04"
+      ],
+      "evidencias_utilizadas": [
+        "Latencia atual: 357.845 ms.",
+        "Latencia de referencia: 24.253 ms (aumento >= 3x e >= 50 ms).",
+        "Ping, DNS e HTTP permanecem funcionais, apontando sobrecarga/fila no enlace compartilhado."
+      ],
+      "recomendacoes_correcao": [
+        "Recomendar ao administrador identificar fluxos concorrentes intensivos no enlace router1-server, avaliar disciplinas de fila ('tc -s qdisc show') e ajustar capacidade ou politicas de QoS."
+      ]
+    }
+  ],
+  "problemas_leitura": [],
+  "nota": "O gabarito e lido exclusivamente neste avaliador apos a inferencia; evidencias sao sanitizadas antes de entrarem no Agente LLM."
+}

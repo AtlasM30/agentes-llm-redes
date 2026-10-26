@@ -1,0 +1,17 @@
+{
+  "politica": "padrao",
+  "repeticao": 1,
+  "caso": 2,
+  "cliente": "client2",
+  "inicio_utc": "2026-10-26T07:01:03.242905+00:00",
+  "fim_utc": "2026-10-26T07:01:25.530984+00:00",
+  "codigo_saida": 0,
+  "concluido": true,
+  "erro": null,
+  "auditorias": [
+    "auditoria_caso_02_padrao_client2.json"
+  ],
+  "erro_429": false,
+  "erro_503": false,
+  "conexao_recusada": false
+}

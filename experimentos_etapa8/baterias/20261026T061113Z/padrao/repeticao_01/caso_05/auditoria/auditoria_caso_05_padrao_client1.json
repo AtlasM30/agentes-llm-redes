@@ -1,0 +1,395 @@
+{
+  "execucao_id": "caso_05_padrao",
+  "dispositivo_alvo": "client1",
+  "iniciado_em_utc": "2026-10-26T06:12:41.377575+00:00",
+  "finalizado_em_utc": "2026-10-26T06:12:51.995308+00:00",
+  "hiperparametros": {
+    "provedor_llm": "gemini",
+    "modelo_llm": "gemini-3.1-flash-lite",
+    "eh_llm_real": true,
+    "temperatura": 0.0,
+    "max_tokens_resposta": 4096,
+    "max_iteracoes": 8,
+    "top_k_rag": 4,
+    "score_minimo_rag": 0.05,
+    "politica_seguranca": "padrao",
+    "modo_evidencias": "progressivo",
+    "versao_indice_rag": "f3f9b041b48fe799",
+    "versao_python": "3.12.3"
+  },
+  "metricas_sessao": {
+    "modo_inferencia": "inferencia_llm_real",
+    "origem_contagem_tokens": "telemetria_oficial_api",
+    "total_iteracoes": 5,
+    "chamadas_llm": 5,
+    "erros_formato_recuperados": 0,
+    "tentativas_duplicadas_evitadas": 0,
+    "testes_propostos": 4,
+    "testes_autorizados_executados": 4,
+    "testes_bloqueados": 0,
+    "houve_bloqueio": false,
+    "adaptou_apos_bloqueio": false,
+    "concluiu_apos_bloqueio": false,
+    "consultas_rag_realizadas": 1,
+    "taxa_aderencia_citacoes_rag": 1.0,
+    "tokens_prompt": 15377,
+    "tokens_completion": 1559,
+    "tokens_total": 16936,
+    "tempo_diagnostico_s": 10.6178
+  },
+  "avaliacao_fundamentacao_rag": {
+    "citacoes_informadas": [
+      "tc_man#02",
+      "tc_man#03"
+    ],
+    "citacoes_presentes_no_contexto": [
+      "tc_man#02",
+      "tc_man#03"
+    ],
+    "citacoes_inexistentes_filtradas": [],
+    "citacoes_aderentes_ao_dominio": [
+      "tc_man#02",
+      "tc_man#03"
+    ],
+    "citacoes_fora_de_dominio": [],
+    "taxa_aderencia_tematica": 1.0
+  },
+  "consultas_rag": [
+    {
+      "iteracao": 0,
+      "consulta": "diagnostico rede mininet topologia sub-redes precedencia interface ip -br link ip route show",
+      "quantidade_recuperada": 4,
+      "trechos": [
+        {
+          "chunk_id": "mininet_walkthrough#02",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 13.3751
+        },
+        {
+          "chunk_id": "mininet_walkthrough#05",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 12.3274
+        },
+        {
+          "chunk_id": "mininet_walkthrough#03",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 11.933
+        },
+        {
+          "chunk_id": "iproute2_man#04",
+          "fonte_id": "iproute2_man",
+          "titulo": "Manual Linux iproute2 — ip-link(8), ip-address(8) e ip-route(8)",
+          "tema": "roteamento_e_interfaces",
+          "score": 11.8623
+        }
+      ]
+    }
+  ],
+  "passos_investigacao": [
+    {
+      "iteracao": 1,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "Para diagnosticar a conectividade entre o client1 e o servidor, devo seguir a precedência causal estabelecida: primeiro verificar o estado da interface de rede do client1 para garantir que ela esteja UP, conforme orientado pela documentação técnica.",
+      "hipoteses_em_aberto": [
+        "falha_de_interface",
+        "falha_de_roteamento",
+        "bloqueio_acl",
+        "problema_dns"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros": {
+          "subcomando": "estado"
+        },
+        "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Consulta somente leitura de interfaces (estado) autorizada em client1.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "subcomando": "estado"
+        },
+        "comando_canonico": [
+          "ip",
+          "-br",
+          "link"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:12:43.176719+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_interfaces",
+          "dispositivo": "client1",
+          "parametros": {
+            "subcomando": "estado"
+          },
+          "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_interfaces",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2408,
+        "completion_tokens": 236,
+        "total_tokens": 2644
+      },
+      "latencia_llm_ms": 1797.53
+    },
+    {
+      "iteracao": 2,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A interface client1-eth0 está UP. Conforme a precedência causal, o próximo passo lógico é verificar a tabela de rotas do client1 para garantir que o tráfego destinado à rede 192.168.20.0/24 ou o gateway padrão (192.168.10.1) esteja configurado corretamente.",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento",
+        "problema_dns",
+        "bloqueio_acl"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_rotas",
+        "dispositivo": "client1",
+        "parametros": {},
+        "justificativa": "Verificar a existência de rotas para o gateway ou para a sub-rede do servidor, conforme pre-requisito de camada 3 estabelecido na documentação."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Leitura da tabela de roteamento autorizada em client1.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "consultar_rotas",
+        "dispositivo": "client1",
+        "parametros_normalizados": {},
+        "comando_canonico": [
+          "ip",
+          "route",
+          "show"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:12:44.568777+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_rotas",
+          "dispositivo": "client1",
+          "parametros": {},
+          "justificativa": "Verificar a existência de rotas para o gateway ou para a sub-rede do servidor, conforme pre-requisito de camada 3 estabelecido na documentação."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_rotas",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2814,
+        "completion_tokens": 247,
+        "total_tokens": 3061
+      },
+      "latencia_llm_ms": 1388.79
+    },
+    {
+      "iteracao": 3,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "As camadas 1 e 2 (interface UP) e a camada 3 (rota default presente) foram validadas no client1. O próximo passo lógico na precedência causal é testar a conectividade fim-a-fim com o servidor (192.168.20.10) via ICMP para verificar se o roteamento entre sub-redes está funcional.",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento_no_router1",
+        "falha_de_conectividade_no_servidor",
+        "bloqueio_por_acl"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_ping",
+        "dispositivo": "client1",
+        "parametros": {
+          "destino": "192.168.20.10",
+          "pacotes": 3,
+          "timeout_s": 2
+        },
+        "justificativa": "Validar a conectividade IP entre o client1 e o servidor, confirmando se o roteamento através do router1 está operante."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Teste ICMP controlado autorizado (3 pacotes para 192.168.20.10).",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "testar_ping",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "destino": "192.168.20.10",
+          "pacotes": 3,
+          "timeout_s": 2,
+          "tamanho_bytes": 56
+        },
+        "comando_canonico": [
+          "ping",
+          "-n",
+          "-c",
+          "3",
+          "-W",
+          "2",
+          "192.168.20.10"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:12:46.666870+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_ping",
+          "dispositivo": "client1",
+          "parametros": {
+            "destino": "192.168.20.10",
+            "pacotes": 3,
+            "timeout_s": 2
+          },
+          "justificativa": "Validar a conectividade IP entre o client1 e o servidor, confirmando se o roteamento através do router1 está operante."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "testar_ping",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3026,
+        "completion_tokens": 299,
+        "total_tokens": 3325
+      },
+      "latencia_llm_ms": 2095.01
+    },
+    {
+      "iteracao": 4,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "O teste de ping apresentou uma latência média de 199.22 ms, o que é significativamente superior à latência de referência de 33.403 ms (mais de 3x a referência e com um aumento absoluto superior a 50 ms). Conforme a documentação técnica (tc_man#03), isso configura um forte indício de congestionamento. Para confirmar se o problema é de fato congestionamento no enlace compartilhado, é necessário verificar se o desempenho de vazão está degradado, conforme sugerido pela documentação.",
+      "hipoteses_em_aberto": [
+        "possivel_congestionamento",
+        "latencia_elevada"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_desempenho",
+        "dispositivo": "client1",
+        "parametros": {
+          "destino": "192.168.20.10",
+          "porta": 5202,
+          "duracao_s": 3,
+          "fluxos": 1
+        },
+        "justificativa": "Validar a vazão disponível entre client1 e server para confirmar o diagnóstico de congestionamento, dado que a latência observada excede os limites de referência."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Sonda controlada iperf3 TCP (3s, 1 fluxo) autorizada de client1 para 192.168.20.10:5202.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "testar_desempenho",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "destino": "192.168.20.10",
+          "porta": 5202,
+          "duracao_s": 3,
+          "fluxos": 1,
+          "protocolo": "TCP"
+        },
+        "comando_canonico": [
+          "iperf3",
+          "-c",
+          "192.168.20.10",
+          "-p",
+          "5202",
+          "-t",
+          "3",
+          "-J"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:12:48.905491+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_desempenho",
+          "dispositivo": "client1",
+          "parametros": {
+            "destino": "192.168.20.10",
+            "porta": 5202,
+            "duracao_s": 3,
+            "fluxos": 1
+          },
+          "justificativa": "Validar a vazão disponível entre client1 e server para confirmar o diagnóstico de congestionamento, dado que a latência observada excede os limites de referência."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": false,
+        "operacao": "testar_desempenho",
+        "aviso": "Medicao ativa iperf3 nao consta neste JSON estatico de evidencias; avalie congestionamento pela latencia_media_ms do ping frente a referencia."
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3442,
+        "completion_tokens": 329,
+        "total_tokens": 3771
+      },
+      "latencia_llm_ms": 2236.02
+    },
+    {
+      "iteracao": 5,
+      "acao_modelo": "concluir_diagnostico",
+      "raciocinio": "O diagnóstico aponta para um possível congestionamento no enlace entre o router1 e o servidor. A latência média observada (199.22 ms) é significativamente superior à latência de referência (33.403 ms), atendendo aos critérios de ser >= 3x a",
+      "hipoteses_em_aberto": null,
+      "solicitacao_teste": null,
+      "decisao_validador": null,
+      "resumo_execucao": null,
+      "uso_tokens": {
+        "prompt_tokens": 3687,
+        "completion_tokens": 448,
+        "total_tokens": 4135
+      },
+      "latencia_llm_ms": 3087.48
+    }
+  ],
+  "resultado_final": {
+    "hipotese": "possivel_congestionamento",
+    "confianca": "indicativa",
+    "evidencias": [
+      "latencia_media_ms=199.22",
+      "latencia_referencia_ms=33.403",
+      "ping_sucesso=true"
+    ],
+    "diagnostico_fundamentado": "O diagnóstico aponta para um possível congestionamento no enlace entre o router1 e o servidor. A latência média observada (199.22 ms) é significativamente superior à latência de referência (33.403 ms), atendendo aos critérios de ser >= 3x a referência e apresentar um aumento absoluto superior a 50 ms. Como a conectividade ICMP está funcional, descarta-se falha de interface ou roteamento, e a latência elevada sugere o fenômeno de bufferbloat no enlace de 10 Mbps, conforme documentado no manual de controle de tráfego.",
+    "hipoteses_descartadas": [
+      "falha_de_interface",
+      "falha_de_roteamento"
+    ],
+    "fontes_rag_citadas": [
+      "tc_man#02",
+      "tc_man#03"
+    ],
+    "avaliacao_fundamentacao_rag": {
+      "citacoes_informadas": [
+        "tc_man#02",
+        "tc_man#03"
+      ],
+      "citacoes_presentes_no_contexto": [
+        "tc_man#02",
+        "tc_man#03"
+      ],
+      "citacoes_inexistentes_filtradas": [],
+      "citacoes_aderentes_ao_dominio": [
+        "tc_man#02",
+        "tc_man#03"
+      ],
+      "citacoes_fora_de_dominio": [],
+      "taxa_aderencia_tematica": 1.0
+    },
+    "recomendacoes_correcao": [
+      "Verificar a utilização de largura de banda no enlace entre router1 e server.",
+      "Investigar a configuração de disciplinas de fila (qdisc) no router1 utilizando 'tc -s qdisc show' para identificar possíveis descartes de pacotes ou filas excessivas."
+    ],
+    "limitacoes_investigacao": "A falha na execução do teste de desempenho (iperf3) impediu a confirmação quantitativa da queda de vazão, baseando-se o diagnóstico estritamente na análise de latência (RTT) conforme critérios de referência."
+  }
+}

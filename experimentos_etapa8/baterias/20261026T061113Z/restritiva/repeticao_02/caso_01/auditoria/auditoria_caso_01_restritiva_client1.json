@@ -1,0 +1,496 @@
+{
+  "execucao_id": "caso_01_restritiva",
+  "dispositivo_alvo": "client1",
+  "iniciado_em_utc": "2026-10-26T06:29:58.583601+00:00",
+  "finalizado_em_utc": "2026-10-26T06:31:33.261844+00:00",
+  "hiperparametros": {
+    "provedor_llm": "gemini",
+    "modelo_llm": "gemini-3.1-flash-lite",
+    "eh_llm_real": true,
+    "temperatura": 0.0,
+    "max_tokens_resposta": 4096,
+    "max_iteracoes": 8,
+    "top_k_rag": 4,
+    "score_minimo_rag": 0.05,
+    "politica_seguranca": "restritiva",
+    "modo_evidencias": "progressivo",
+    "versao_indice_rag": "f3f9b041b48fe799",
+    "versao_python": "3.12.3"
+  },
+  "metricas_sessao": {
+    "modo_inferencia": "inferencia_llm_real",
+    "origem_contagem_tokens": "telemetria_oficial_api",
+    "total_iteracoes": 7,
+    "chamadas_llm": 7,
+    "erros_formato_recuperados": 0,
+    "tentativas_duplicadas_evitadas": 1,
+    "testes_propostos": 5,
+    "testes_autorizados_executados": 5,
+    "testes_bloqueados": 0,
+    "houve_bloqueio": false,
+    "adaptou_apos_bloqueio": false,
+    "concluiu_apos_bloqueio": false,
+    "consultas_rag_realizadas": 1,
+    "taxa_aderencia_citacoes_rag": 1.0,
+    "tokens_prompt": 23433,
+    "tokens_completion": 2337,
+    "tokens_total": 25770,
+    "tempo_diagnostico_s": 94.6783
+  },
+  "avaliacao_fundamentacao_rag": {
+    "citacoes_informadas": [
+      "dnsmasq_man#03",
+      "bind9_dig#04"
+    ],
+    "citacoes_presentes_no_contexto": [
+      "dnsmasq_man#03",
+      "bind9_dig#04"
+    ],
+    "citacoes_inexistentes_filtradas": [],
+    "citacoes_aderentes_ao_dominio": [
+      "dnsmasq_man#03",
+      "bind9_dig#04"
+    ],
+    "citacoes_fora_de_dominio": [],
+    "taxa_aderencia_tematica": 1.0
+  },
+  "consultas_rag": [
+    {
+      "iteracao": 0,
+      "consulta": "diagnostico rede mininet topologia sub-redes precedencia interface ip -br link ip route show",
+      "quantidade_recuperada": 4,
+      "trechos": [
+        {
+          "chunk_id": "mininet_walkthrough#02",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 13.3751
+        },
+        {
+          "chunk_id": "mininet_walkthrough#05",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 12.3274
+        },
+        {
+          "chunk_id": "mininet_walkthrough#03",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 11.933
+        },
+        {
+          "chunk_id": "iproute2_man#04",
+          "fonte_id": "iproute2_man",
+          "titulo": "Manual Linux iproute2 — ip-link(8), ip-address(8) e ip-route(8)",
+          "tema": "roteamento_e_interfaces",
+          "score": 11.8623
+        }
+      ]
+    }
+  ],
+  "passos_investigacao": [
+    {
+      "iteracao": 1,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "Para diagnosticar a conectividade entre o client1 e o servidor, devo seguir a precedência causal estabelecida: primeiro verificar o estado da interface de rede do client1 para garantir que ela esteja UP, conforme orientado pela documentação técnica.",
+      "hipoteses_em_aberto": [
+        "falha_de_interface",
+        "falha_de_roteamento",
+        "bloqueio_acl",
+        "problema_dns"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros": {
+          "subcomando": "estado"
+        },
+        "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Consulta somente leitura de interfaces (estado) autorizada em client1.",
+        "aspecto_verificado": "todos",
+        "politica": "restritiva",
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "subcomando": "estado"
+        },
+        "comando_canonico": [
+          "ip",
+          "-br",
+          "link"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:30:23.280267+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_interfaces",
+          "dispositivo": "client1",
+          "parametros": {
+            "subcomando": "estado"
+          },
+          "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_interfaces",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2408,
+        "completion_tokens": 236,
+        "total_tokens": 2644
+      },
+      "latencia_llm_ms": 24685.46
+    },
+    {
+      "iteracao": 2,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A interface client1-eth0 está UP. Conforme a precedência causal, o próximo passo lógico é verificar a tabela de rotas do client1 para garantir que o tráfego destinado à rede 192.168.20.0/24 ou o gateway padrão (192.168.10.1) esteja configurado corretamente.",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento",
+        "problema_dns",
+        "bloqueio_acl"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_rotas",
+        "dispositivo": "client1",
+        "parametros": {},
+        "justificativa": "Verificar a existência de rotas para o gateway ou para a sub-rede do servidor, conforme pre-requisito de camada 3 estabelecido na documentação."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Leitura da tabela de roteamento autorizada em client1.",
+        "aspecto_verificado": "todos",
+        "politica": "restritiva",
+        "operacao": "consultar_rotas",
+        "dispositivo": "client1",
+        "parametros_normalizados": {},
+        "comando_canonico": [
+          "ip",
+          "route",
+          "show"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:30:33.080531+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_rotas",
+          "dispositivo": "client1",
+          "parametros": {},
+          "justificativa": "Verificar a existência de rotas para o gateway ou para a sub-rede do servidor, conforme pre-requisito de camada 3 estabelecido na documentação."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_rotas",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2814,
+        "completion_tokens": 247,
+        "total_tokens": 3061
+      },
+      "latencia_llm_ms": 9792.78
+    },
+    {
+      "iteracao": 3,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "As camadas 1 e 2 (interface UP) e a camada 3 (rota default presente) foram validadas no client1. O próximo passo lógico na precedência causal é testar a conectividade fim-a-fim com o servidor (192.168.20.10) via ICMP para verificar se o roteamento entre sub-redes está funcional.",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento_no_router1",
+        "falha_de_conectividade_no_servidor",
+        "bloqueio_por_acl"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_ping",
+        "dispositivo": "client1",
+        "parametros": {
+          "destino": "192.168.20.10",
+          "pacotes": 3,
+          "timeout_s": 2
+        },
+        "justificativa": "Validar a conectividade IP entre o client1 e o servidor, confirmando se o roteamento através do router1 está operante."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Teste ICMP controlado autorizado (3 pacotes para 192.168.20.10).",
+        "aspecto_verificado": "todos",
+        "politica": "restritiva",
+        "operacao": "testar_ping",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "destino": "192.168.20.10",
+          "pacotes": 3,
+          "timeout_s": 2,
+          "tamanho_bytes": 56
+        },
+        "comando_canonico": [
+          "ping",
+          "-n",
+          "-c",
+          "3",
+          "-W",
+          "2",
+          "192.168.20.10"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:30:38.740326+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_ping",
+          "dispositivo": "client1",
+          "parametros": {
+            "destino": "192.168.20.10",
+            "pacotes": 3,
+            "timeout_s": 2
+          },
+          "justificativa": "Validar a conectividade IP entre o client1 e o servidor, confirmando se o roteamento através do router1 está operante."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "testar_ping",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3026,
+        "completion_tokens": 299,
+        "total_tokens": 3325
+      },
+      "latencia_llm_ms": 5657.46
+    },
+    {
+      "iteracao": 4,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A conectividade ICMP (ping) entre client1 e o servidor 192.168.20.10 está operacional, com latência média de 22.107ms. Como o ping foi bem-sucedido, a camada 3 está íntegra. O próximo passo lógico é verificar a resolução de nomes (DNS) para o domínio app.lab.local, conforme a precedência causal estabelecida.",
+      "hipoteses_em_aberto": [
+        "problema_dns",
+        "bloqueio_acl",
+        "problema_http_ou_bloqueio"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_dns",
+        "dispositivo": "client1",
+        "parametros": {
+          "servidor_dns": "192.168.20.10",
+          "dominio": "app.lab.local",
+          "timeout_s": 2,
+          "tentativas": 1
+        },
+        "justificativa": "Validar se o serviço DNS no servidor está respondendo corretamente para o domínio app.lab.local, dado que a conectividade IP básica foi confirmada."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Consulta DNS controlada autorizada (app.lab.local A em @192.168.20.10).",
+        "aspecto_verificado": "todos",
+        "politica": "restritiva",
+        "operacao": "testar_dns",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "servidor_dns": "192.168.20.10",
+          "dominio": "app.lab.local",
+          "tipo_registro": "A",
+          "timeout_s": 2,
+          "tentativas": 1,
+          "usar_perfil_cliente": true
+        },
+        "comando_canonico": [
+          "dig",
+          "@192.168.20.10",
+          "app.lab.local",
+          "A",
+          "+time=2",
+          "+tries=1",
+          "+short"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:30:43.304774+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_dns",
+          "dispositivo": "client1",
+          "parametros": {
+            "servidor_dns": "192.168.20.10",
+            "dominio": "app.lab.local",
+            "timeout_s": 2,
+            "tentativas": 1
+          },
+          "justificativa": "Validar se o serviço DNS no servidor está respondendo corretamente para o domínio app.lab.local, dado que a conectividade IP básica foi confirmada."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "testar_dns",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3492,
+        "completion_tokens": 318,
+        "total_tokens": 3810
+      },
+      "latencia_llm_ms": 4562.69
+    },
+    {
+      "iteracao": 5,
+      "acao_modelo": "solicitar_teste_duplicado_ignorado",
+      "raciocinio": "A conectividade IP (ping) para o servidor 192.168.20.10 está funcional. O teste DNS anterior falhou porque foi direcionado ao IP 192.168.20.99, que não é o servidor de DNS correto (o servidor de DNS é o próprio 192.168.20.10). Conforme a documentação (dnsmasq_man#03), é necessário validar se o serviço DNS está operacional no servidor correto e se o acesso HTTP por IP funciona, para descartar problemas de configuração no cliente ou indisponibilidade do serviço.",
+      "hipoteses_em_aberto": [
+        "problema_dns",
+        "bloqueio_acl",
+        "problema_http_ou_bloqueio"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_dns",
+        "dispositivo": "client1",
+        "parametros": {
+          "servidor_dns": "192.168.20.10",
+          "dominio": "app.lab.local",
+          "timeout_s": 2,
+          "tentativas": 1
+        },
+        "justificativa": "Validar a resolução DNS diretamente no servidor correto (192.168.20.10) após a falha anterior ter sido causada por um IP de servidor DNS incorreto."
+      },
+      "decisao_validador": null,
+      "resumo_execucao": null,
+      "uso_tokens": {
+        "prompt_tokens": 3788,
+        "completion_tokens": 369,
+        "total_tokens": 4157
+      },
+      "latencia_llm_ms": 3938.87
+    },
+    {
+      "iteracao": 6,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A conectividade IP (ping) entre client1 e o servidor (192.168.20.10) está confirmada e funcional. A tentativa anterior de resolução DNS falhou ao utilizar o IP 192.168.20.99, que não é o endereço do servidor (192.168.20.10). Conforme a documentação (dnsmasq_man#03), é necessário verificar se o serviço DNS está operacional no servidor correto (192.168.20.10) e se o acesso HTTP por IP funciona, para isolar se o problema é apenas a configuração do servidor DNS no cliente ou uma falha no serviço DNS do servidor.",
+      "hipoteses_em_aberto": [
+        "Configuração incorreta de servidor DNS no cliente",
+        "Indisponibilidade do serviço DNS no servidor"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_http",
+        "dispositivo": "client1",
+        "parametros": {
+          "url": "http://192.168.20.10/",
+          "metodo": "GET"
+        },
+        "justificativa": "Validar se o serviço HTTP no servidor está acessível via IP, confirmando a saúde da aplicação e a conectividade de camada 7, antes de concluir sobre a falha de DNS."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Teste HTTP (GET http://192.168.20.10/) autorizado a partir de client1.",
+        "aspecto_verificado": "todos",
+        "politica": "restritiva",
+        "operacao": "testar_http",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "url": "http://192.168.20.10/",
+          "metodo": "GET",
+          "connect_timeout_s": 3,
+          "max_time_s": 5
+        },
+        "comando_canonico": [
+          "curl",
+          "--noproxy",
+          "*",
+          "--silent",
+          "--show-error",
+          "--output",
+          "/dev/null",
+          "--write-out",
+          "%{http_code}",
+          "--connect-timeout",
+          "3",
+          "--max-time",
+          "5",
+          "http://192.168.20.10/"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:31:28.467478+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_http",
+          "dispositivo": "client1",
+          "parametros": {
+            "url": "http://192.168.20.10/",
+            "metodo": "GET"
+          },
+          "justificativa": "Validar se o serviço HTTP no servidor está acessível via IP, confirmando a saúde da aplicação e a conectividade de camada 7, antes de concluir sobre a falha de DNS."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "testar_http",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3840,
+        "completion_tokens": 362,
+        "total_tokens": 4202
+      },
+      "latencia_llm_ms": 41215.79
+    },
+    {
+      "iteracao": 7,
+      "acao_modelo": "concluir_diagnostico",
+      "raciocinio": "A conectividade de rede entre o client1 e o servidor (192.168.20.10) está plenamente funcional, conforme evidenciado pelo sucesso no ping (latência média de 22.1ms) e pelo acesso HTTP bem-sucedido (código 200). A falha na resolução DNS ocor",
+      "hipoteses_em_aberto": null,
+      "solicitacao_teste": null,
+      "decisao_validador": null,
+      "resumo_execucao": null,
+      "uso_tokens": {
+        "prompt_tokens": 4065,
+        "completion_tokens": 506,
+        "total_tokens": 4571
+      },
+      "latencia_llm_ms": 4790.21
+    }
+  ],
+  "resultado_final": {
+    "hipotese": "problema_dns",
+    "confianca": "indicativa",
+    "evidencias": [
+      "ping 192.168.20.10 (sucesso)",
+      "http://192.168.20.10/ (sucesso, código 200)",
+      "dig @192.168.20.99 (falha por timeout)"
+    ],
+    "diagnostico_fundamentado": "A conectividade de rede entre o client1 e o servidor (192.168.20.10) está plenamente funcional, conforme evidenciado pelo sucesso no ping (latência média de 22.1ms) e pelo acesso HTTP bem-sucedido (código 200). A falha na resolução DNS ocorre especificamente porque o cliente está tentando consultar o servidor DNS no endereço 192.168.20.99, que não possui serviço DNS ativo, enquanto o servidor de aplicação (192.168.20.10) está operacional. A falha é, portanto, uma configuração incorreta do servidor DNS no cliente, e não uma indisponibilidade do serviço dnsmasq no servidor.",
+    "hipoteses_descartadas": [
+      "falha_de_interface",
+      "falha_de_roteamento",
+      "bloqueio_acl"
+    ],
+    "fontes_rag_citadas": [
+      "dnsmasq_man#03",
+      "bind9_dig#04"
+    ],
+    "avaliacao_fundamentacao_rag": {
+      "citacoes_informadas": [
+        "dnsmasq_man#03",
+        "bind9_dig#04"
+      ],
+      "citacoes_presentes_no_contexto": [
+        "dnsmasq_man#03",
+        "bind9_dig#04"
+      ],
+      "citacoes_inexistentes_filtradas": [],
+      "citacoes_aderentes_ao_dominio": [
+        "dnsmasq_man#03",
+        "bind9_dig#04"
+      ],
+      "citacoes_fora_de_dominio": [],
+      "taxa_aderencia_tematica": 1.0
+    },
+    "recomendacoes_correcao": [
+      "Atualizar a configuração de DNS no client1 para apontar para o endereço IP correto do servidor DNS (192.168.20.10) em vez de 192.168.20.99."
+    ],
+    "limitacoes_investigacao": "Não foi possível verificar a configuração do arquivo /etc/resolv.conf ou as configurações de rede persistentes do cliente devido às restrições de leitura apenas de estado de rede."
+  }
+}

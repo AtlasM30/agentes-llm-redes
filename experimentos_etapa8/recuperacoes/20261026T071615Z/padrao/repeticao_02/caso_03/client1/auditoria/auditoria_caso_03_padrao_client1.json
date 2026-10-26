@@ -1,0 +1,207 @@
+{
+  "execucao_id": "caso_03_padrao",
+  "dispositivo_alvo": "client1",
+  "iniciado_em_utc": "2026-10-26T07:18:53.077474+00:00",
+  "finalizado_em_utc": "2026-10-26T07:19:00.117520+00:00",
+  "hiperparametros": {
+    "provedor_llm": "gemini",
+    "modelo_llm": "gemini-3.1-flash-lite",
+    "eh_llm_real": true,
+    "temperatura": 0.0,
+    "max_tokens_resposta": 4096,
+    "max_iteracoes": 8,
+    "top_k_rag": 4,
+    "score_minimo_rag": 0.05,
+    "politica_seguranca": "padrao",
+    "modo_evidencias": "progressivo",
+    "versao_indice_rag": "f3f9b041b48fe799",
+    "versao_python": "3.12.3"
+  },
+  "metricas_sessao": {
+    "modo_inferencia": "inferencia_llm_real",
+    "origem_contagem_tokens": "telemetria_oficial_api",
+    "total_iteracoes": 2,
+    "chamadas_llm": 2,
+    "erros_formato_recuperados": 0,
+    "tentativas_duplicadas_evitadas": 0,
+    "testes_propostos": 1,
+    "testes_autorizados_executados": 1,
+    "testes_bloqueados": 0,
+    "houve_bloqueio": false,
+    "adaptou_apos_bloqueio": false,
+    "concluiu_apos_bloqueio": false,
+    "consultas_rag_realizadas": 1,
+    "taxa_aderencia_citacoes_rag": 1.0,
+    "tokens_prompt": 5358,
+    "tokens_completion": 596,
+    "tokens_total": 5954,
+    "tempo_diagnostico_s": 7.0401
+  },
+  "avaliacao_fundamentacao_rag": {
+    "citacoes_informadas": [
+      "iproute2_man#04",
+      "iproute2_man#00"
+    ],
+    "citacoes_presentes_no_contexto": [
+      "iproute2_man#04",
+      "iproute2_man#00"
+    ],
+    "citacoes_inexistentes_filtradas": [],
+    "citacoes_aderentes_ao_dominio": [
+      "iproute2_man#04",
+      "iproute2_man#00"
+    ],
+    "citacoes_fora_de_dominio": [],
+    "taxa_aderencia_tematica": 1.0
+  },
+  "consultas_rag": [
+    {
+      "iteracao": 0,
+      "consulta": "diagnostico rede mininet topologia sub-redes precedencia interface ip -br link ip route show",
+      "quantidade_recuperada": 4,
+      "trechos": [
+        {
+          "chunk_id": "mininet_walkthrough#02",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 13.3751
+        },
+        {
+          "chunk_id": "mininet_walkthrough#05",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 12.3274
+        },
+        {
+          "chunk_id": "mininet_walkthrough#03",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 11.933
+        },
+        {
+          "chunk_id": "iproute2_man#04",
+          "fonte_id": "iproute2_man",
+          "titulo": "Manual Linux iproute2 — ip-link(8), ip-address(8) e ip-route(8)",
+          "tema": "roteamento_e_interfaces",
+          "score": 11.8623
+        }
+      ]
+    }
+  ],
+  "passos_investigacao": [
+    {
+      "iteracao": 1,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "Para diagnosticar a conectividade entre o client1 e o servidor, devo seguir a precedência causal estabelecida: primeiro verificar o estado da interface de rede do client1 para garantir que ela esteja UP, conforme orientado pela documentação técnica.",
+      "hipoteses_em_aberto": [
+        "falha_de_interface",
+        "falha_de_roteamento",
+        "bloqueio_acl",
+        "problema_dns"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros": {
+          "subcomando": "estado"
+        },
+        "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Consulta somente leitura de interfaces (estado) autorizada em client1.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client1",
+        "parametros_normalizados": {
+          "subcomando": "estado"
+        },
+        "comando_canonico": [
+          "ip",
+          "-br",
+          "link"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T07:18:54.977461+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_interfaces",
+          "dispositivo": "client1",
+          "parametros": {
+            "subcomando": "estado"
+          },
+          "justificativa": "Verificar se a interface de rede do client1 está ativa (UP) antes de prosseguir com testes de conectividade, conforme a precedência causal obrigatória."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_interfaces",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2408,
+        "completion_tokens": 236,
+        "total_tokens": 2644
+      },
+      "latencia_llm_ms": 1862.89
+    },
+    {
+      "iteracao": 2,
+      "acao_modelo": "concluir_diagnostico",
+      "raciocinio": "A interface 'client1-eth0' encontra-se no estado 'DOWN', conforme verificado via 'consultar_interfaces'. De acordo com a documentação técnica (iproute2_man#04), quando uma interface está administrativamente desativada, o kernel remove autom",
+      "hipoteses_em_aberto": null,
+      "solicitacao_teste": null,
+      "decisao_validador": null,
+      "resumo_execucao": null,
+      "uso_tokens": {
+        "prompt_tokens": 2950,
+        "completion_tokens": 360,
+        "total_tokens": 3310
+      },
+      "latencia_llm_ms": 5079.05
+    }
+  ],
+  "resultado_final": {
+    "hipotese": "falha_de_interface",
+    "confianca": "alta",
+    "evidencias": [
+      "client1-eth0@if48 DOWN"
+    ],
+    "diagnostico_fundamentado": "A interface 'client1-eth0' encontra-se no estado 'DOWN', conforme verificado via 'consultar_interfaces'. De acordo com a documentação técnica (iproute2_man#04), quando uma interface está administrativamente desativada, o kernel remove automaticamente as rotas associadas e descarta todo o tráfego de rede, o que explica a impossibilidade de comunicação com o servidor.",
+    "hipoteses_descartadas": [
+      "falha_de_roteamento",
+      "problema_dns",
+      "bloqueio_acl",
+      "possivel_congestionamento"
+    ],
+    "fontes_rag_citadas": [
+      "iproute2_man#04",
+      "iproute2_man#00"
+    ],
+    "avaliacao_fundamentacao_rag": {
+      "citacoes_informadas": [
+        "iproute2_man#04",
+        "iproute2_man#00"
+      ],
+      "citacoes_presentes_no_contexto": [
+        "iproute2_man#04",
+        "iproute2_man#00"
+      ],
+      "citacoes_inexistentes_filtradas": [],
+      "citacoes_aderentes_ao_dominio": [
+        "iproute2_man#04",
+        "iproute2_man#00"
+      ],
+      "citacoes_fora_de_dominio": [],
+      "taxa_aderencia_tematica": 1.0
+    },
+    "recomendacoes_correcao": [
+      "O administrador humano deve ativar a interface de rede no host client1 utilizando o comando 'ip link set client1-eth0 up'."
+    ],
+    "limitacoes_investigacao": "A investigação foi interrompida na camada de enlace (L2) devido à precedência causal obrigatória, não sendo possível realizar testes de conectividade de camada superior (L3/L7) enquanto a interface estiver inativa."
+  }
+}

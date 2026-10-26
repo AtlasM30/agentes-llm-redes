@@ -1,0 +1,471 @@
+{
+  "execucao_id": "caso_00_padrao",
+  "dispositivo_alvo": "client2",
+  "iniciado_em_utc": "2026-10-26T06:16:07.946951+00:00",
+  "finalizado_em_utc": "2026-10-26T06:16:31.203671+00:00",
+  "hiperparametros": {
+    "provedor_llm": "gemini",
+    "modelo_llm": "gemini-3.1-flash-lite",
+    "eh_llm_real": true,
+    "temperatura": 0.0,
+    "max_tokens_resposta": 4096,
+    "max_iteracoes": 8,
+    "top_k_rag": 4,
+    "score_minimo_rag": 0.05,
+    "politica_seguranca": "padrao",
+    "modo_evidencias": "progressivo",
+    "versao_indice_rag": "f3f9b041b48fe799",
+    "versao_python": "3.12.3"
+  },
+  "metricas_sessao": {
+    "modo_inferencia": "inferencia_llm_real",
+    "origem_contagem_tokens": "telemetria_oficial_api",
+    "total_iteracoes": 6,
+    "chamadas_llm": 6,
+    "erros_formato_recuperados": 0,
+    "tentativas_duplicadas_evitadas": 0,
+    "testes_propostos": 5,
+    "testes_autorizados_executados": 5,
+    "testes_bloqueados": 0,
+    "houve_bloqueio": false,
+    "adaptou_apos_bloqueio": false,
+    "concluiu_apos_bloqueio": false,
+    "consultas_rag_realizadas": 1,
+    "taxa_aderencia_citacoes_rag": 1.0,
+    "tokens_prompt": 19585,
+    "tokens_completion": 1816,
+    "tokens_total": 21401,
+    "tempo_diagnostico_s": 23.2568
+  },
+  "avaliacao_fundamentacao_rag": {
+    "citacoes_informadas": [
+      "mininet_walkthrough#03",
+      "mininet_walkthrough#02"
+    ],
+    "citacoes_presentes_no_contexto": [
+      "mininet_walkthrough#03",
+      "mininet_walkthrough#02"
+    ],
+    "citacoes_inexistentes_filtradas": [],
+    "citacoes_aderentes_ao_dominio": [
+      "mininet_walkthrough#03",
+      "mininet_walkthrough#02"
+    ],
+    "citacoes_fora_de_dominio": [],
+    "taxa_aderencia_tematica": 1.0
+  },
+  "consultas_rag": [
+    {
+      "iteracao": 0,
+      "consulta": "diagnostico rede mininet topologia sub-redes precedencia interface ip -br link ip route show",
+      "quantidade_recuperada": 4,
+      "trechos": [
+        {
+          "chunk_id": "mininet_walkthrough#02",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 13.3751
+        },
+        {
+          "chunk_id": "mininet_walkthrough#05",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 12.3274
+        },
+        {
+          "chunk_id": "mininet_walkthrough#03",
+          "fonte_id": "mininet_walkthrough",
+          "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+          "tema": "topologia_e_isolamento",
+          "score": 11.933
+        },
+        {
+          "chunk_id": "iproute2_man#04",
+          "fonte_id": "iproute2_man",
+          "titulo": "Manual Linux iproute2 — ip-link(8), ip-address(8) e ip-route(8)",
+          "tema": "roteamento_e_interfaces",
+          "score": 11.8623
+        }
+      ]
+    }
+  ],
+  "passos_investigacao": [
+    {
+      "iteracao": 1,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "Para diagnosticar a conectividade do client2, devo seguir a precedencia causal estabelecida: verificar primeiro o estado da interface, depois a tabela de rotas e, em seguida, a conectividade basica (ping).",
+      "hipoteses_em_aberto": [
+        "falha_de_interface",
+        "falha_de_roteamento",
+        "falha_de_conectividade"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client2",
+        "parametros": {
+          "subcomando": "estado"
+        },
+        "justificativa": "Verificar se a interface client2-eth0 esta UP, conforme exigido pela precedencia causal antes de avaliar rotas ou conectividade."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Consulta somente leitura de interfaces (estado) autorizada em client2.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "consultar_interfaces",
+        "dispositivo": "client2",
+        "parametros_normalizados": {
+          "subcomando": "estado"
+        },
+        "comando_canonico": [
+          "ip",
+          "-br",
+          "link"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:16:10.130010+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_interfaces",
+          "dispositivo": "client2",
+          "parametros": {
+            "subcomando": "estado"
+          },
+          "justificativa": "Verificar se a interface client2-eth0 esta UP, conforme exigido pela precedencia causal antes de avaliar rotas ou conectividade."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_interfaces",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2408,
+        "completion_tokens": 223,
+        "total_tokens": 2631
+      },
+      "latencia_llm_ms": 2181.52
+    },
+    {
+      "iteracao": 2,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A interface client2-eth0 esta UP. Conforme a precedencia causal estabelecida, o proximo passo logico e verificar a tabela de rotas do client2 para garantir que o tráfego destinado a rede 192.168.20.0/24 seja encaminhado corretamente para o gateway (router1).",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento",
+        "falha_de_conectividade"
+      ],
+      "solicitacao_teste": {
+        "operacao": "consultar_rotas",
+        "dispositivo": "client2",
+        "parametros": {},
+        "justificativa": "Verificar a existencia de rota para a sub-rede do servidor (192.168.20.0/24) ou rota default apontando para 192.168.10.1, conforme pre-requisito de roteamento."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Leitura da tabela de roteamento autorizada em client2.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "consultar_rotas",
+        "dispositivo": "client2",
+        "parametros_normalizados": {},
+        "comando_canonico": [
+          "ip",
+          "route",
+          "show"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:16:15.577331+00:00",
+        "solicitacao_original": {
+          "operacao": "consultar_rotas",
+          "dispositivo": "client2",
+          "parametros": {},
+          "justificativa": "Verificar a existencia de rota para a sub-rede do servidor (192.168.20.0/24) ou rota default apontando para 192.168.10.1, conforme pre-requisito de roteamento."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "consultar_rotas",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 2810,
+        "completion_tokens": 259,
+        "total_tokens": 3069
+      },
+      "latencia_llm_ms": 5445.25
+    },
+    {
+      "iteracao": 3,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A interface client2-eth0 esta UP e a rota default para 192.168.10.1 esta presente. O proximo passo lógico na precedência causal é verificar a conectividade básica (ICMP) com o servidor para confirmar se o roteamento está funcional.",
+      "hipoteses_em_aberto": [
+        "falha_de_roteamento",
+        "problema_dns",
+        "bloqueio_acl",
+        "latencia_elevada"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_ping",
+        "dispositivo": "client2",
+        "parametros": {
+          "destino": "192.168.20.10",
+          "pacotes": 3,
+          "timeout_s": 2
+        },
+        "justificativa": "Validar a conectividade de camada 3 entre o cliente e o servidor, conforme pre-requisito para diagnosticos de camadas superiores."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Teste ICMP controlado autorizado (3 pacotes para 192.168.20.10).",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "testar_ping",
+        "dispositivo": "client2",
+        "parametros_normalizados": {
+          "destino": "192.168.20.10",
+          "pacotes": 3,
+          "timeout_s": 2,
+          "tamanho_bytes": 56
+        },
+        "comando_canonico": [
+          "ping",
+          "-n",
+          "-c",
+          "3",
+          "-W",
+          "2",
+          "192.168.20.10"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:16:18.862961+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_ping",
+          "dispositivo": "client2",
+          "parametros": {
+            "destino": "192.168.20.10",
+            "pacotes": 3,
+            "timeout_s": 2
+          },
+          "justificativa": "Validar a conectividade de camada 3 entre o cliente e o servidor, conforme pre-requisito para diagnosticos de camadas superiores."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "testar_ping",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3047,
+        "completion_tokens": 271,
+        "total_tokens": 3318
+      },
+      "latencia_llm_ms": 3282.17
+    },
+    {
+      "iteracao": 4,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A conectividade de camada 3 (ICMP) entre client2 e o servidor foi validada com sucesso. O próximo passo lógico, conforme a precedência causal, é verificar a resolução de nomes (DNS) para o domínio 'app.lab.local', visto que o acesso ao serviço depende da tradução correta do nome para o IP do servidor.",
+      "hipoteses_em_aberto": [
+        "problema_dns",
+        "bloqueio_acl",
+        "sem_anomalia_detectada"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_dns",
+        "dispositivo": "client2",
+        "parametros": {
+          "servidor_dns": "192.168.20.10",
+          "dominio": "app.lab.local",
+          "timeout_s": 2,
+          "tentativas": 1
+        },
+        "justificativa": "Validar se o serviço DNS no servidor está respondendo corretamente para o domínio solicitado, requisito para o acesso HTTP subsequente."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Consulta DNS controlada autorizada (app.lab.local A em @192.168.20.10).",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "testar_dns",
+        "dispositivo": "client2",
+        "parametros_normalizados": {
+          "servidor_dns": "192.168.20.10",
+          "dominio": "app.lab.local",
+          "tipo_registro": "A",
+          "timeout_s": 2,
+          "tentativas": 1,
+          "usar_perfil_cliente": true
+        },
+        "comando_canonico": [
+          "dig",
+          "@192.168.20.10",
+          "app.lab.local",
+          "A",
+          "+time=2",
+          "+tries=1",
+          "+short"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:16:22.100921+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_dns",
+          "dispositivo": "client2",
+          "parametros": {
+            "servidor_dns": "192.168.20.10",
+            "dominio": "app.lab.local",
+            "timeout_s": 2,
+            "tentativas": 1
+          },
+          "justificativa": "Validar se o serviço DNS no servidor está respondendo corretamente para o domínio solicitado, requisito para o acesso HTTP subsequente."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "testar_dns",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3513,
+        "completion_tokens": 288,
+        "total_tokens": 3801
+      },
+      "latencia_llm_ms": 3230.29
+    },
+    {
+      "iteracao": 5,
+      "acao_modelo": "solicitar_teste",
+      "raciocinio": "A interface esta UP, a rota esta configurada corretamente, o ping para o servidor esta funcionando (latencia media de 24.253ms) e a resolucao DNS para 'app.lab.local' esta retornando o IP correto do servidor. O proximo passo logico, conforme a precedencia causal, e testar a conectividade HTTP para verificar se o servico web esta acessivel ou se ha algum bloqueio de camada de aplicacao.",
+      "hipoteses_em_aberto": [
+        "bloqueio_acl",
+        "problema_http_ou_bloqueio",
+        "sem_anomalia_detectada"
+      ],
+      "solicitacao_teste": {
+        "operacao": "testar_http",
+        "dispositivo": "client2",
+        "parametros": {
+          "url": "http://192.168.20.10/",
+          "metodo": "GET"
+        },
+        "justificativa": "Validar o acesso ao servico HTTP no servidor, uma vez que as camadas inferiores (L2, L3 e DNS) estao operacionais."
+      },
+      "decisao_validador": {
+        "autorizado": true,
+        "codigo_motivo": "AUTORIZADO",
+        "motivo": "Teste HTTP (GET http://192.168.20.10/) autorizado a partir de client2.",
+        "aspecto_verificado": "todos",
+        "politica": "padrao",
+        "operacao": "testar_http",
+        "dispositivo": "client2",
+        "parametros_normalizados": {
+          "url": "http://192.168.20.10/",
+          "metodo": "GET",
+          "connect_timeout_s": 3,
+          "max_time_s": 5
+        },
+        "comando_canonico": [
+          "curl",
+          "--noproxy",
+          "*",
+          "--silent",
+          "--show-error",
+          "--output",
+          "/dev/null",
+          "--write-out",
+          "%{http_code}",
+          "--connect-timeout",
+          "3",
+          "--max-time",
+          "5",
+          "http://192.168.20.10/"
+        ],
+        "justificativa_ignorada_na_decisao": true,
+        "timestamp_utc": "2026-10-26T06:16:26.609774+00:00",
+        "solicitacao_original": {
+          "operacao": "testar_http",
+          "dispositivo": "client2",
+          "parametros": {
+            "url": "http://192.168.20.10/",
+            "metodo": "GET"
+          },
+          "justificativa": "Validar o acesso ao servico HTTP no servidor, uma vez que as camadas inferiores (L2, L3 e DNS) estao operacionais."
+        }
+      },
+      "resumo_execucao": {
+        "sucesso_execucao": true,
+        "operacao": "testar_http",
+        "aviso": null
+      },
+      "uso_tokens": {
+        "prompt_tokens": 3795,
+        "completion_tokens": 302,
+        "total_tokens": 4097
+      },
+      "latencia_llm_ms": 4499.73
+    },
+    {
+      "iteracao": 6,
+      "acao_modelo": "concluir_diagnostico",
+      "raciocinio": "O diagnóstico realizado no client2 confirmou a integridade de todas as camadas de rede necessárias para a comunicação com o servidor app.lab.local. A interface client2-eth0 está UP, a tabela de rotas contém a rota default correta, o teste I",
+      "hipoteses_em_aberto": null,
+      "solicitacao_teste": null,
+      "decisao_validador": null,
+      "resumo_execucao": null,
+      "uso_tokens": {
+        "prompt_tokens": 4012,
+        "completion_tokens": 473,
+        "total_tokens": 4485
+      },
+      "latencia_llm_ms": 4585.32
+    }
+  ],
+  "resultado_final": {
+    "hipotese": "sem_anomalia_detectada",
+    "confianca": "alta",
+    "evidencias": [
+      "Interface client2-eth0 UP",
+      "Rota default via 192.168.10.1 presente",
+      "Ping 192.168.20.10 bem-sucedido (0% perda)",
+      "DNS app.lab.local resolvido para 192.168.20.10",
+      "HTTP GET http://192.168.20.10/ retornou 200"
+    ],
+    "diagnostico_fundamentado": "O diagnóstico realizado no client2 confirmou a integridade de todas as camadas de rede necessárias para a comunicação com o servidor app.lab.local. A interface client2-eth0 está UP, a tabela de rotas contém a rota default correta, o teste ICMP (ping) obteve sucesso com latência média de 24.253ms, a resolução DNS retornou o IP correto do servidor e o teste HTTP (GET) obteve resposta 200 OK. Não foram identificadas falhas de conectividade, roteamento, DNS ou bloqueios por ACL.",
+    "hipoteses_descartadas": [
+      "falha_de_interface",
+      "falha_de_roteamento",
+      "problema_dns",
+      "bloqueio_acl",
+      "latencia_elevada"
+    ],
+    "fontes_rag_citadas": [
+      "mininet_walkthrough#03",
+      "mininet_walkthrough#02"
+    ],
+    "avaliacao_fundamentacao_rag": {
+      "citacoes_informadas": [
+        "mininet_walkthrough#03",
+        "mininet_walkthrough#02"
+      ],
+      "citacoes_presentes_no_contexto": [
+        "mininet_walkthrough#03",
+        "mininet_walkthrough#02"
+      ],
+      "citacoes_inexistentes_filtradas": [],
+      "citacoes_aderentes_ao_dominio": [
+        "mininet_walkthrough#03",
+        "mininet_walkthrough#02"
+      ],
+      "citacoes_fora_de_dominio": [],
+      "taxa_aderencia_tematica": 1.0
+    },
+    "recomendacoes_correcao": [
+      "Nenhuma ação necessária. O serviço está operando conforme esperado."
+    ],
+    "limitacoes_investigacao": "Nenhuma. O conjunto de testes cobriu todas as camadas do modelo OSI relevantes para o problema reportado."
+  }
+}

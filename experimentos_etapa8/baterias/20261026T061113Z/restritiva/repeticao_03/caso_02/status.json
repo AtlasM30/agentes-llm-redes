@@ -1,0 +1,14 @@
+{
+  "politica": "restritiva",
+  "repeticao": 3,
+  "caso": 2,
+  "inicio_utc": "2026-10-26T06:34:55.067748+00:00",
+  "fim_utc": "2026-10-26T06:34:55.607302+00:00",
+  "duracao_total_s": 0.539554,
+  "codigo_saida": 1,
+  "erro_orquestrador": null,
+  "auditorias": [],
+  "quantidade_auditorias": 0,
+  "completo": false,
+  "pasta": "experimentos_etapa8/baterias/20261026T061113Z/restritiva/repeticao_03/caso_02"
+}

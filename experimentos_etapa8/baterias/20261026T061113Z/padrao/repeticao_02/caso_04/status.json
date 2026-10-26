@@ -1,0 +1,17 @@
+{
+  "politica": "padrao",
+  "repeticao": 2,
+  "caso": 4,
+  "inicio_utc": "2026-10-26T06:14:12.025446+00:00",
+  "fim_utc": "2026-10-26T06:15:06.666137+00:00",
+  "duracao_total_s": 54.640691,
+  "codigo_saida": 0,
+  "erro_orquestrador": null,
+  "auditorias": [
+    "auditoria_caso_04_padrao_client1.json",
+    "auditoria_caso_04_padrao_client2.json"
+  ],
+  "quantidade_auditorias": 2,
+  "completo": true,
+  "pasta": "experimentos_etapa8/baterias/20261026T061113Z/padrao/repeticao_02/caso_04"
+}
