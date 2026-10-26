@@ -76,24 +76,99 @@ def extrair_json_resposta(texto):
             return json.loads(limpo)
 
 
-def _requisicao_http_com_backoff(construir_request, timeout_s, max_tentativas=3):
-    """Executa chamada HTTP com retentativa exponencial para HTTP 429/503."""
+
+def _requisicao_http_com_backoff(
+    construir_request,
+    timeout_s,
+    max_tentativas=3
+):
+    """
+    Executa requisicoes HTTP com retentativas para
+    erros temporarios e registra tentativas malsucedidas.
+    """
+    import socket
+    import urllib.error
+    import urllib.request
+    import json
+    import time
+
     atraso = 1.5
+
     for tentativa in range(1, max_tentativas + 1):
-        req = construir_request()
         try:
-            with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-                return json.loads(resp.read().decode("utf-8"))
+            req = construir_request()
+
+            with urllib.request.urlopen(
+                req,
+                timeout=timeout_s
+            ) as resp:
+                conteudo = resp.read().decode("utf-8")
+                return json.loads(conteudo)
+
         except urllib.error.HTTPError as exc:
-            if exc.code in (429, 503) and tentativa < max_tentativas:
-                retry_hdr = exc.headers.get("Retry-After") if exc.headers else None
-                espera = float(retry_hdr) if (retry_hdr and retry_hdr.isdigit()) else atraso
-                time.sleep(min(espera, 12.0))
-                atraso *= 2.0
-                continue
-            detalhe = exc.read().decode("utf-8", errors="replace")[:500]
-            raise RuntimeError(f"Erro HTTP {exc.code}: {detalhe}") from exc
-    raise RuntimeError("Falha apos esgotar retentativas HTTP.")
+            if exc.code not in (429, 500, 502, 503, 504):
+                raise RuntimeError(
+                    f"Erro HTTP permanente: {exc.code}"
+                ) from exc
+
+            erro = f"HTTP {exc.code}"
+
+            retry_after = (
+                exc.headers.get("Retry-After")
+                if exc.headers else None
+            )
+
+            espera = atraso
+
+            if retry_after:
+                try:
+                    espera = max(0, float(retry_after))
+                except ValueError:
+                    pass
+
+        except (TimeoutError, socket.timeout) as exc:
+            erro = f"Timeout da API: {type(exc).__name__}"
+            espera = atraso
+
+        except urllib.error.URLError as exc:
+            # Erros de certificado ou configuracao
+            # precisam ser investigados, nao repetidos.
+            motivo = exc.reason
+
+            if not isinstance(
+                motivo, (TimeoutError, socket.timeout)
+            ):
+                raise RuntimeError(
+                    f"Falha de conexao com a API: {motivo}"
+                ) from exc
+
+            erro = "Timeout de conexao com a API"
+            espera = atraso
+
+        print(
+            f"[API] Tentativa {tentativa}/{max_tentativas}: "
+            f"{erro}",
+            flush=True
+        )
+
+        if tentativa == max_tentativas:
+            raise RuntimeError(
+                f"Falha de API apos {max_tentativas} "
+                f"tentativas. Ultimo erro: {erro}"
+            )
+
+        espera = min(espera, 12.0)
+
+        print(
+            f"[API] Nova tentativa em {espera:.1f}s. "
+            "A chamada anterior pode ter consumido tokens.",
+            flush=True
+        )
+
+        time.sleep(espera)
+        atraso = min(atraso * 2, 12.0)
+
+    raise RuntimeError("Falha inesperada na requisicao HTTP.")
 
 
 class ClienteLLMBase:
