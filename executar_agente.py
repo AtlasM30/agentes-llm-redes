@@ -115,7 +115,7 @@ def main():
     parser.add_argument("--provedor", default="simulado", choices=("simulado", "gemini", "openai", "groq", "ollama"))
     parser.add_argument("--modelo", default=None, help="Nome do modelo no provedor escolhido")
     parser.add_argument("--temperatura", type=float, default=0.0)
-    parser.add_argument("--max-tokens", type=int, default=1200)
+    parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--max-iteracoes", type=int, default=8)
     parser.add_argument("--top-k", type=int, default=4)
     parser.add_argument("--politica", default="padrao", choices=("padrao", "restritiva"))
@@ -200,6 +200,7 @@ def main():
         print(f"SESSAO AGENTE LLM — {identificador.upper()} (Politica: {args.politica})")
         print("=" * 68)
         for nome in ("client1", "client2"):
+            print(f"[*] Analisando {nome} com {args.provedor} ({agente.config.modelo_llm})...", flush=True)
             _, auditoria = agente.diagnosticar(
                 dispositivo=nome,
                 evidencias_rede=dados_rede,

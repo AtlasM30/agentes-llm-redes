@@ -65,7 +65,15 @@ def extrair_json_resposta(texto):
     try:
         return json.loads(limpo_sem_virgula_final)
     except json.JSONDecodeError:
-        return json.loads(limpo)
+        # Se foi truncado por limite de tokens (unterminated string), fecha a string e as chaves abertas
+        reparado = limpo_sem_virgula_final
+        if reparado.count('"') % 2 != 0:
+            reparado += '"'
+        reparado += "}" * max(0, reparado.count("{") - reparado.count("}"))
+        try:
+            return json.loads(reparado)
+        except Exception:
+            return json.loads(limpo)
 
 
 def _requisicao_http_com_backoff(construir_request, timeout_s, max_tentativas=3):
@@ -110,9 +118,9 @@ class ClienteGemini(ClienteLLMBase):
     provedor = "gemini"
     eh_llm_real = True
 
-    def __init__(self, modelo=None, temperatura=0.0, max_tokens=1200, timeout_s=45, api_key=None):
+    def __init__(self, modelo=None, temperatura=0.0, max_tokens=2500, timeout_s=45, api_key=None):
         carregar_variaveis_env()
-        modelo_efetivo = modelo or os.environ.get("LLM_MODELO") or "gemini-2.5-flash"
+        modelo_efetivo = modelo or os.environ.get("LLM_MODELO") or "gemini-1.5-flash"
         super().__init__(modelo_efetivo, temperatura, max_tokens, timeout_s)
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
         if not self.api_key:
@@ -125,14 +133,18 @@ class ClienteGemini(ClienteLLMBase):
             f"https://generativelanguage.googleapis.com/v1beta/models/"
             f"{self.modelo}:generateContent?key={self.api_key}"
         )
+        gen_config = {
+            "temperature": self.temperatura,
+            "maxOutputTokens": max(self.max_tokens, 4096),
+            "responseMimeType": "application/json",
+        }
+        if any(k in self.modelo.lower() for k in ("2.5", "3", "thinking", "preview")):
+            gen_config["thinkingConfig"] = {"thinkingBudget": 0}
+
         payload = {
             "systemInstruction": {"parts": [{"text": prompt_sistema}]},
             "contents": [{"role": "user", "parts": [{"text": prompt_usuario}]}],
-            "generationConfig": {
-                "temperature": self.temperatura,
-                "maxOutputTokens": self.max_tokens,
-                "responseMimeType": "application/json",
-            },
+            "generationConfig": gen_config,
         }
         corpo = json.dumps(payload).encode("utf-8")
         inicio = time.monotonic()
