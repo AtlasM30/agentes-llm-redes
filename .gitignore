@@ -25,6 +25,7 @@ venv/
 logs/
 dados/gabaritos/
 dados/desempenho/
+resultados_agente/auditoria/
 
 # Backups
 backup_etapa5/
