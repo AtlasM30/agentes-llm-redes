@@ -1,0 +1,91 @@
+{
+  "versao_catalogo": "1.0.0",
+  "data_compilacao": "2026-10-25",
+  "politica_ingestao": "Somente documentacao tecnica de referencia e comandos de inspecao somente leitura. Gabaritos experimentais (avaliacao/ e dados/gabaritos/) sao estritamente proibidos.",
+  "fontes": [
+    {
+      "fonte_id": "mininet_walkthrough",
+      "titulo": "Mininet Walkthrough e Isolamento por Namespaces",
+      "url": "https://mininet.org/walkthrough/",
+      "versao": "Mininet 2.3.0 / Open vSwitch 3.3.9",
+      "data_acesso": "2026-10-25",
+      "tema": "topologia_e_isolamento",
+      "comandos_relevantes": ["ping", "ip -br link", "ip -br addr", "ip route show"],
+      "licenca": "BSD-3-Clause (Mininet Documentation)",
+      "escopo_de_uso": "Compreensao de namespaces de rede, enlaces TCLink, switches OVS standalone e limites de /etc/resolv.conf compartilhado.",
+      "arquivo": "01_mininet_walkthrough.md"
+    },
+    {
+      "fonte_id": "iperf3_esnet",
+      "titulo": "Documentacao Tecnica iperf3 (ESnet) — Medicao de Vazao TCP",
+      "url": "https://software.es.net/iperf/",
+      "versao": "iperf 3.16",
+      "data_acesso": "2026-10-25",
+      "tema": "medicoes_tcp_desempenho",
+      "comandos_relevantes": ["iperf3 -c", "iperf3 -J"],
+      "licenca": "BSD-3-Clause (ESnet / Lawrence Berkeley National Laboratory)",
+      "escopo_de_uso": "Interpretacao de vazao TCP (sum_received.bits_per_second), timeouts sob congestionamento e limites seguros de duracao e fluxos.",
+      "arquivo": "02_iperf3_manual.md"
+    },
+    {
+      "fonte_id": "dnsmasq_man",
+      "titulo": "Manual Tecnico dnsmasq(8) — Resolucao DNS Local",
+      "url": "https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html",
+      "versao": "Dnsmasq 2.91",
+      "data_acesso": "2026-10-25",
+      "tema": "servico_dns",
+      "comandos_relevantes": ["dig"],
+      "licenca": "GPL-2.0-or-later (Simon Kelley)",
+      "escopo_de_uso": "Funcionamento de servidor DNS autoritativo local (--no-resolv, --address, --listen-address) e sintomas de servidor DNS incorreto.",
+      "arquivo": "03_dnsmasq_manual.md"
+    },
+    {
+      "fonte_id": "bind9_dig",
+      "titulo": "Manual BIND 9 dig(1) — Consultas e Diagnostico de Resolucao DNS",
+      "url": "https://bind9.readthedocs.io/en/latest/manpages.html",
+      "versao": "BIND 9.18.39 (Ubuntu 24.04)",
+      "data_acesso": "2026-10-25",
+      "tema": "resolucao_dns",
+      "comandos_relevantes": ["dig @servidor dominio A +short +time=2 +tries=1"],
+      "licenca": "MPL-2.0 (ISC BIND 9)",
+      "escopo_de_uso": "Execucao segura de consultas DNS tipo A com timeout curto e diferenciacao entre falha de conectividade IP e falha exclusiva de DNS.",
+      "arquivo": "04_bind9_dig_manual.md"
+    },
+    {
+      "fonte_id": "iproute2_man",
+      "titulo": "Manual Linux iproute2 — ip-link(8), ip-address(8) e ip-route(8)",
+      "url": "https://man7.org/linux/man-pages/man8/ip-route.8.html",
+      "versao": "iproute2-6.1.0",
+      "data_acesso": "2026-10-25",
+      "tema": "roteamento_e_interfaces",
+      "comandos_relevantes": ["ip -br link", "ip -br addr", "ip -s link", "ip route show", "ip route get"],
+      "licenca": "GPL-2.0 (Linux man-pages / iproute2)",
+      "escopo_de_uso": "Inspecao do estado administrativo/operacional de interfaces (UP/DOWN), enderecamento IPv4, tabelas de roteamento e precedencia causal interface vs rota.",
+      "arquivo": "05_iproute2_manual.md"
+    },
+    {
+      "fonte_id": "iptables_man",
+      "titulo": "Manual Linux iptables(8) — Filtragem de Pacotes IPv4 e ACLs",
+      "url": "https://man7.org/linux/man-pages/man8/iptables.8.html",
+      "versao": "iptables v1.8.10 (nf_tables)",
+      "data_acesso": "2026-10-25",
+      "tema": "regras_acl_firewall",
+      "comandos_relevantes": ["iptables -S", "curl"],
+      "licenca": "GPL-2.0 (Netfilter Project)",
+      "escopo_de_uso": "Leitura segura de regras ACL com iptables -S, identificacao de bloqueios DROP/REJECT por origem (-s) e porta (--dport 80) na cadeia INPUT.",
+      "arquivo": "06_iptables_manual.md"
+    },
+    {
+      "fonte_id": "tc_man",
+      "titulo": "Manual Linux tc(8) — Controle de Trafego, Filas, Latencia e Congestionamento",
+      "url": "https://man7.org/linux/man-pages/man8/tc.8.html",
+      "versao": "iproute2-6.1.0",
+      "data_acesso": "2026-10-25",
+      "tema": "controle_trafego_congestionamento",
+      "comandos_relevantes": ["tc -s qdisc show", "ping", "iperf3 -c"],
+      "licenca": "GPL-2.0 (Linux man-pages / iproute2)",
+      "escopo_de_uso": "Compreensao de disciplinas de fila (HTB, TBF, NetEm), impacto de enlaces limitados no RTT (bufferbloat) e diagnostico de congestionamento.",
+      "arquivo": "07_tc_netem_manual.md"
+    }
+  ]
+}
